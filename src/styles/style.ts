@@ -28,6 +28,11 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#585858",
   },
+  navbarInner: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingVertical: 10,
+  },
 });
 
 export default styles;

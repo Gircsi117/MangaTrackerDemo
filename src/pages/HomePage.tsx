@@ -2,14 +2,12 @@ import React from "react";
 import { Text } from "react-native";
 import styles from "../styles/style";
 import Container from "../components/Container";
+import { HomePageProps } from "../types/navigation.types";
 
-const HomePage = () => {
+const HomePage: React.FC<HomePageProps> = ({ route, navigation }) => {
   return (
     <Container withNavbar>
       <Text style={styles.text}>Almaaa</Text>
-      <Text style={styles.text}>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-      </Text>
     </Container>
   );
 };
