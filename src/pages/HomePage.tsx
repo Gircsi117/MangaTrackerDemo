@@ -1,6 +1,6 @@
 import React from "react";
 import { Text } from "react-native";
-import styles from "../styles/style";
+import styles from "../styles/styles";
 import Container from "../components/Container";
 import { HomePageProps } from "../types/navigation.types";
 

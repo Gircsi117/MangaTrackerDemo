@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "../styles/style";
+import styles from "../styles/styles";
 import Navbar from "./Navbar";
 
 type ContainerProps = {

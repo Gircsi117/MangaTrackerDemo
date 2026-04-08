@@ -2,7 +2,7 @@ import React from "react";
 import Container from "../components/Container";
 import { Text } from "react-native";
 import { DetailsPageProps } from "../types/navigation.types";
-import styles from "../styles/style";
+import styles from "../styles/styles";
 
 const DetailsPage: React.FC<DetailsPageProps> = ({ route, navigation }) => {
   const name = route.params?.name;
