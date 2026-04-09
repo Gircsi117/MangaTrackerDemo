@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Container from "../components/Container";
 import { MangaPageProps } from "../types/navigation.type";
 import { Chapter, Manga } from "../types/manga.type";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import { Image as RNImage } from "expo-image";
 import styles from "../styles/styles";
 
 const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
@@ -10,6 +11,8 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
 
   const [manga, setManga] = useState<Manga | null>(null);
   const [chapters, setChapters] = useState<Chapter[]>([]);
+
+  const [aspectRatio, setAspectRatio] = useState("2/3");
 
   useEffect(() => {
     const getManga = async () => {
@@ -26,9 +29,18 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
 
   return (
     <Container withNavbar>
-      <Image
+      <RNImage
         source={{ uri: manga?.coverUrl }}
-        style={{ width: "100%", aspectRatio: "2/3", borderRadius: 8 }}
+        style={{
+          ...styles.image,
+          aspectRatio: aspectRatio,
+        }}
+        contentFit="contain"
+        recyclingKey={manga?.id}
+        onLoad={(e) => {
+          const { width, height } = e.source;
+          setAspectRatio(`${width}/${height}`);
+        }}
       />
       <Text
         style={[
@@ -41,7 +53,7 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
       <Text style={[styles.text, { color: "#aaa", marginBottom: 8 }]}>
         {manga?.author} • {manga?.type}
       </Text>
-      <Text style={[styles.text, { lineHeight: 22 }]}>
+      <Text style={[styles.text, { lineHeight: 22, marginBottom: 16 }]}>
         {manga?.description}
       </Text>
       {chapters.map((chapter) => (

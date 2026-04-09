@@ -35,6 +35,14 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route }) => {
             }}
             contentFit="contain"
             recyclingKey={page.id}
+            onLoad={(e) => {
+              const { width, height } = e.source;
+              setPages((prev) =>
+                prev.map((p) =>
+                  p.id === page.id ? { ...p, width, height } : p,
+                ),
+              );
+            }}
           />
         )}
       />

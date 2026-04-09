@@ -14,7 +14,7 @@ abstract class MangaPage {
 
   public abstract getManga(): Promise<Manga | null>;
   public abstract getChapters(): Promise<Chapter[]>;
-  public abstract getChapterPages(slug: ChapterSlug): Promise<ChapterPage[]>;
+  public abstract getChapterPages(chapterSlug: ChapterSlug): Promise<ChapterPage[]>;
 }
 
 export default MangaPage;

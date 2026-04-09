@@ -19,6 +19,11 @@ const base = StyleSheet.create({
   text: {
     color: colors.font,
   },
+  image: {
+    backgroundColor: "#585858",
+    width: "100%",
+    height: undefined,
+  },
 });
 
 //*------------------------------------------------------------------------------------------------------------------

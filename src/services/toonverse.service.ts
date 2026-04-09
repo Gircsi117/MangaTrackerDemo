@@ -95,14 +95,14 @@ class ToonVerseService extends MangaPage {
           .map((x: any, i: number) => ({ index: i, ...x }))
           .map(async (x: any) => {
             const imageUrl = x.imageUrl;
-            const { width, height } = await Image.getImageSize(imageUrl);
+            //const { width, height } = await Image.getImageSize(imageUrl);
 
             const result: ChapterPage = {
               id: x.id,
               index: x.index,
               imageUrl,
-              width,
-              height,
+              width: 2,
+              height: 3,
             };
 
             return result;
