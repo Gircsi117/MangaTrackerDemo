@@ -6,10 +6,13 @@ import { v4 as uuidv4 } from "uuid";
 class MangaDexService extends MangaPage {
   private static readonly NAME = "MangaDex";
   private static readonly BASE_URL = "https://api.mangadex.org";
+  public static readonly referer = "https://api.mangadex.org/";
+
   private static readonly axios = axios.create({
     baseURL: this.BASE_URL,
     headers: {
-      Referer: "https://mangadex.org",
+      Referer: this.referer,
+      "User-Agent": this.userAgent,
     },
   });
 

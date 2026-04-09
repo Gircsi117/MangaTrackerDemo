@@ -30,7 +30,13 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
   return (
     <Container withNavbar>
       <RNImage
-        source={{ uri: manga?.coverUrl }}
+        source={{
+          uri: manga?.coverUrl,
+          headers: {
+            Referer: service.referer,
+            "User-Agent": service.userAgent,
+          },
+        }}
         style={{
           ...styles.image,
           aspectRatio: aspectRatio,

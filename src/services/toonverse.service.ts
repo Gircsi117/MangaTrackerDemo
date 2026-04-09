@@ -5,8 +5,13 @@ import { Chapter, ChapterPage, ChapterSlug, Manga } from "../types/manga.type";
 class ToonVerseService extends MangaPage {
   private static readonly NAME = "ToonVerse";
   private static readonly BASE_URL = "https://api.toonverse.net/api";
+  public static readonly referer = "https://api.toonverse.net/";
   private static readonly axios = axios.create({
     baseURL: this.BASE_URL,
+    headers: {
+      Referer: this.referer,
+      "User-Agent": this.userAgent,
+    },
   });
 
   public static async search(): Promise<Manga[]> {

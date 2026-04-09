@@ -27,7 +27,13 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route }) => {
         keyExtractor={(page) => page.id}
         renderItem={({ item: page }) => (
           <RNImage
-            source={{ uri: page.imageUrl }}
+            source={{
+              uri: page.imageUrl,
+              headers: {
+                Referer: service.referer,
+                "User-Agent": service.userAgent,
+              },
+            }}
             style={{
               width: "100%",
               height: undefined,

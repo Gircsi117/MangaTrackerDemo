@@ -6,8 +6,14 @@ import { parse } from "node-html-parser";
 class AsuraScansService extends MangaPage {
   private static readonly NAME = "AsuraScans";
   private static readonly BASE_URL = "https://asurascans.com";
+  public static readonly referer = "https://asurascans.com/";
+
   private static readonly axios = axios.create({
     baseURL: this.BASE_URL,
+    headers: {
+      Referer: this.referer,
+      "User-Agent": this.userAgent,
+    },
   });
 
   public async getManga(): Promise<Manga | null> {

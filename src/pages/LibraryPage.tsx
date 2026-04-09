@@ -8,6 +8,7 @@ import { Text } from "react-native";
 import styles from "../styles/styles";
 import MangaDexService from "../services/mangadex.service";
 import AsuraScansService from "../services/asurascans.service";
+import MangaBuddyService from "../services/mangabuddy.service";
 
 const LibraryPage: React.FC<LibraryPageProps> = ({ navigation }) => {
   return (
@@ -69,6 +70,18 @@ const LibraryPage: React.FC<LibraryPageProps> = ({ navigation }) => {
         }
       >
         Solo Leveling
+      </Button>
+
+      <Text style={styles.text}>MangaDubby</Text>
+      <Button
+        onPress={() =>
+          navigation.navigate("Manga", {
+            slug: "shut-up-evil-dragon-i-dont-want-to-raise-a-child-with-you-anymore",
+            service: MangaBuddyService,
+          })
+        }
+      >
+        Shut up Evil Dragon
       </Button>
     </Container>
   );
