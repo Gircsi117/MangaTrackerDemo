@@ -7,7 +7,7 @@ import { HomePageProps } from "../types/navigation.types";
 const HomePage: React.FC<HomePageProps> = ({ route, navigation }) => {
   return (
     <Container withNavbar>
-      <Text style={styles.text}>Almaaa</Text>
+      <Text style={styles.text}>Home</Text>
     </Container>
   );
 };
