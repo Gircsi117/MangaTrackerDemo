@@ -11,6 +11,7 @@ import AsuraScansService from "../services/asurascans.service";
 import MangaBuddyService from "../services/mangabuddy.service";
 
 const LibraryPage: React.FC<LibraryPageProps> = ({ navigation }) => {
+
   return (
     <Container withNavbar>
       <Text style={styles.text}>ToonVerse</Text>

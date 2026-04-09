@@ -24,6 +24,16 @@ const base = StyleSheet.create({
     width: "100%",
     height: undefined,
   },
+  mangaServiceItem: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    padding: 8,
+    paddingVertical: 8,
+    backgroundColor: "#585858",
+    borderRadius: 8,
+  },
 });
 
 //*------------------------------------------------------------------------------------------------------------------

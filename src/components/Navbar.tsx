@@ -2,7 +2,12 @@ import React from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles, { colors } from "../styles/styles";
-import { Ionicons, MaterialIcons, Fontisto } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialIcons,
+  Fontisto,
+  AntDesign,
+} from "@expo/vector-icons";
 import NavbarItem from "./NavbarItem";
 import { useNavigationState } from "@react-navigation/native";
 import { RootStackParamList } from "../types/navigation.type";
@@ -27,6 +32,10 @@ const Navbar = () => {
     {
       to: "History",
       icon: <Fontisto name="history" size={ICON_SIZE} />,
+    },
+    {
+      to: "Browsing",
+      icon: <AntDesign name="compass" size={ICON_SIZE} />,
     },
     {
       to: "Settings",

@@ -1,15 +1,22 @@
 import axios from "axios";
 import MangaPage from "../modules/manga-page.module";
-import { Chapter, ChapterPage, ChapterSlug, Manga } from "../types/manga.type";
+import {
+  Chapter,
+  ChapterPage,
+  ChapterSlug,
+  Manga,
+  MangaPageConstructor,
+} from "../types/manga.type";
 import { parse } from "node-html-parser";
 
 class AsuraScansService extends MangaPage {
-  private static readonly NAME = "AsuraScans";
-  private static readonly BASE_URL = "https://asurascans.com";
+  public static readonly name = "AsuraScans";
+  private static readonly baseUrl = "https://asurascans.com";
   public static readonly referer = "https://asurascans.com/";
+  public static readonly logoUrl = "https://asurascans.com/images/logo.webp";
 
   private static readonly axios = axios.create({
-    baseURL: this.BASE_URL,
+    baseURL: this.baseUrl,
     headers: {
       Referer: this.referer,
       "User-Agent": this.userAgent,
@@ -105,4 +112,5 @@ class AsuraScansService extends MangaPage {
   }
 }
 
+AsuraScansService satisfies MangaPageConstructor;
 export default AsuraScansService;

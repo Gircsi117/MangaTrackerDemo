@@ -1,22 +1,34 @@
 import axios from "axios";
 import MangaPage from "../modules/manga-page.module";
-import { Chapter, ChapterPage, ChapterSlug, Manga } from "../types/manga.type";
+import {
+  Chapter,
+  ChapterPage,
+  ChapterSlug,
+  Manga,
+  MangaPageConstructor,
+} from "../types/manga.type";
 import { v4 as uuidv4 } from "uuid";
 
 class MangaDexService extends MangaPage {
-  private static readonly NAME = "MangaDex";
-  private static readonly BASE_URL = "https://api.mangadex.org";
-  public static readonly referer = "https://api.mangadex.org/";
+  public static readonly name = "MangaDex_HU";
+  private static readonly baseUrl = "https://api.mangadex.org";
+  public static readonly referer = "https://mangadex.org/";
+  public static readonly logoUrl =
+    "https://mangadex.org/pwa/icons/icon-192.png";
 
   private static readonly axios = axios.create({
-    baseURL: this.BASE_URL,
+    baseURL: this.baseUrl,
     headers: {
       Referer: this.referer,
       "User-Agent": this.userAgent,
     },
   });
+  private readonly lang: string;
 
-  private readonly lang: string = "hu";
+  constructor(slug: string) {
+    super(slug);
+    this.lang = "hu";
+  }
 
   private getTitle(titles: { [key: string]: string }[]): string {
     try {
@@ -148,4 +160,5 @@ class MangaDexService extends MangaPage {
   }
 }
 
+MangaDexService satisfies MangaPageConstructor;
 export default MangaDexService;

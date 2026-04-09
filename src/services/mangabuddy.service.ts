@@ -1,16 +1,24 @@
 import axios from "axios";
 import MangaPage from "../modules/manga-page.module";
-import { Chapter, ChapterPage, ChapterSlug, Manga } from "../types/manga.type";
+import {
+  Chapter,
+  ChapterPage,
+  ChapterSlug,
+  Manga,
+  MangaPageConstructor,
+} from "../types/manga.type";
 import { parse } from "node-html-parser";
 import { v4 as uuidv4 } from "uuid";
 
 class MangaBuddyService extends MangaPage {
-  private static readonly NAME = "MangaBuddy";
-  private static readonly BASE_URL = "https://mangabuddy.com";
+  public static readonly name = "MangaBuddy";
+  private static readonly baseUrl = "https://mangabuddy.com";
   public static readonly referer = "https://mangabuddy.com/";
+  public static readonly logoUrl =
+    "https://mangabuddy.com/static/sites/mangabuddy/icons/android-chrome-192x192.png";
 
   private static readonly axios = axios.create({
-    baseURL: this.BASE_URL,
+    baseURL: this.baseUrl,
     headers: {
       Referer: this.referer,
       "User-Agent": this.userAgent,
@@ -96,4 +104,5 @@ class MangaBuddyService extends MangaPage {
   }
 }
 
+MangaBuddyService satisfies MangaPageConstructor;
 export default MangaBuddyService;

@@ -1,21 +1,68 @@
 import MangaPage from "../modules/manga-page.module";
 import axios from "axios";
-import { Chapter, ChapterPage, ChapterSlug, Manga } from "../types/manga.type";
+import {
+  Chapter,
+  ChapterPage,
+  ChapterSlug,
+  List,
+  ListParams,
+  Manga,
+  MangaPageConstructor,
+} from "../types/manga.type";
 
 class ToonVerseService extends MangaPage {
-  private static readonly NAME = "ToonVerse";
-  private static readonly BASE_URL = "https://api.toonverse.net/api";
-  public static readonly referer = "https://api.toonverse.net/";
+  public static readonly name = "ToonVerse";
+  private static readonly baseUrl = "https://api.toonverse.net/api";
+  public static readonly referer = "https://toonverse.net/";
+  public static readonly logoUrl = "https://toonverse.net/logo.png";
+
   private static readonly axios = axios.create({
-    baseURL: this.BASE_URL,
+    baseURL: this.baseUrl,
     headers: {
       Referer: this.referer,
       "User-Agent": this.userAgent,
     },
   });
 
-  public static async search(): Promise<Manga[]> {
-    return [];
+  public static async search(params: ListParams): Promise<List<Manga>> {
+    try {
+      const { limit = 20, query } = params;
+
+      const result = await ToonVerseService.axios({
+        method: "GET",
+        url: `/series/search`,
+        params: {
+          q: query,
+          limit: limit,
+        },
+      });
+
+      const data: any[] = result.data.data || [];
+      const items: Manga[] = [];
+
+      for (const item of data) {
+        const { id, slug, title, coverUrl } = item;
+        items.push({
+          id: id,
+          slug: slug,
+          title: title,
+          coverUrl: coverUrl,
+          author: "",
+          type: "",
+          description: "",
+        });
+      }
+
+      return {
+        items: items,
+        totalCount: data.length,
+      };
+    } catch (error) {
+      return {
+        items: [],
+        totalCount: 0,
+      };
+    }
   }
 
   public async getManga(): Promise<Manga | null> {
@@ -63,8 +110,6 @@ class ToonVerseService extends MangaPage {
       });
 
       const { chapters = [] } = result.data.data;
-
-      //console.log(chapters);
 
       return chapters.map(
         (x: any) =>
@@ -122,4 +167,5 @@ class ToonVerseService extends MangaPage {
   }
 }
 
+ToonVerseService satisfies MangaPageConstructor;
 export default ToonVerseService;

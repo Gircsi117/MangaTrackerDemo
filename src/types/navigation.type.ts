@@ -1,12 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import MangaPage from "../modules/manga-page.module";
-import { ChapterSlug, Manga } from "./manga.type";
-
-type MangaPageConstructor = {
-  new (slug: string): MangaPage;
-  userAgent: string;
-  referer: string;
-};
+import { ChapterSlug, MangaPageConstructor } from "./manga.type";
 
 export type RootStackParamList = {
   Library: undefined;
@@ -18,6 +11,7 @@ export type RootStackParamList = {
     chapterSlug: ChapterSlug;
     service: MangaPageConstructor;
   };
+  Browsing: undefined;
 };
 
 export type HistoryPageProps = NativeStackScreenProps<
@@ -38,6 +32,11 @@ export type MangaPageProps = NativeStackScreenProps<
 export type ChapterPageProps = NativeStackScreenProps<
   RootStackParamList,
   "Chapter"
+>;
+
+export type BrowsingPageProps = NativeStackScreenProps<
+  RootStackParamList,
+  "Browsing"
 >;
 
 export type SettingsPageProps = NativeStackScreenProps<
