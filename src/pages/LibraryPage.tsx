@@ -7,6 +7,7 @@ import Button from "../components/Button";
 import { Text } from "react-native";
 import styles from "../styles/styles";
 import MangaDexService from "../services/mangadex.service";
+import AsuraScansService from "../services/asurascans.service";
 
 const LibraryPage: React.FC<LibraryPageProps> = ({ navigation }) => {
   return (
@@ -56,6 +57,18 @@ const LibraryPage: React.FC<LibraryPageProps> = ({ navigation }) => {
         }
       >
         Shut up Evil Dragon
+      </Button>
+
+      <Text style={styles.text}>AsuraScans</Text>
+      <Button
+        onPress={() =>
+          navigation.navigate("Manga", {
+            slug: "solo-leveling-7f873ca6",
+            service: AsuraScansService,
+          })
+        }
+      >
+        Solo Leveling
       </Button>
     </Container>
   );

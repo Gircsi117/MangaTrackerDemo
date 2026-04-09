@@ -1,7 +1,6 @@
 import MangaPage from "../modules/manga-page.module";
 import axios from "axios";
 import { Chapter, ChapterPage, ChapterSlug, Manga } from "../types/manga.type";
-import Image from "../modules/image.module";
 
 class ToonVerseService extends MangaPage {
   private static readonly NAME = "ToonVerse";
