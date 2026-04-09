@@ -91,8 +91,6 @@ class AsuraScansService extends MangaPage {
 
       const props = JSON.parse(propsRaw);
 
-      console.log(props);
-
       return props.pages[1].map((page: any, index: number) => ({
         id: String(index),
         index,

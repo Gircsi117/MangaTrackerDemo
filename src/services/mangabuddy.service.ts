@@ -39,8 +39,6 @@ class MangaBuddyService extends MangaPage {
       type: "unknown",
     };
 
-    console.log(manga);
-
     return manga;
   }
 
@@ -76,8 +74,6 @@ class MangaBuddyService extends MangaPage {
     chapterSlug: ChapterSlug,
   ): Promise<ChapterPage[]> {
     try {
-      console.log(chapterSlug);
-
       const res = await MangaBuddyService.axios({
         method: "GET",
         url: `/${this.slug}/${chapterSlug}`,
