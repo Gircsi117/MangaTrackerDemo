@@ -1,5 +1,5 @@
 import React from "react";
-import { RootStackParamList } from "../types/navigation.types";
+import { RootStackParamList } from "../types/navigation.type";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
@@ -18,7 +18,7 @@ const NavbarItem: React.FC<Props> = ({ children, to, params }) => {
 
   return (
     <TouchableOpacity
-      style={styles.navbarItem}
+      style={[styles.navbarItem]}
       onPress={() => navigation.navigate(to, params as any)}
     >
       {children}

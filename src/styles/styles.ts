@@ -1,5 +1,10 @@
 import { StyleSheet } from "react-native";
 
+export const colors = {
+  font: "#fff",
+  primary: "#aa0093",
+};
+
 //*------------------------------------------------------------------------------------------------------------------
 //* Base
 //*------------------------------------------------------------------------------------------------------------------
@@ -12,18 +17,7 @@ const base = StyleSheet.create({
     padding: 8,
   },
   text: {
-    color: "#fff",
-  },
-  button: {
-    marginTop: 20,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    backgroundColor: "#4a90e2",
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: colors.font,
   },
 });
 
@@ -44,7 +38,7 @@ const nav = StyleSheet.create({
     gap: 8,
   },
   navbarItem: {
-    backgroundColor: "red",
+    //backgroundColor: "red",
     width: 50,
     aspectRatio: "1/1",
     borderRadius: 8,
@@ -54,7 +48,27 @@ const nav = StyleSheet.create({
   },
 });
 
+//*------------------------------------------------------------------------------------------------------------------
+//* Button
+//*------------------------------------------------------------------------------------------------------------------
+const button = StyleSheet.create({
+  button: {
+    alignSelf: "flex-start",
+    marginTop: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    backgroundColor: colors.primary,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: colors.font,
+    fontSize: 16,
+    textAlign: "center",
+  },
+});
+
 export default {
   ...base,
   ...nav,
+  ...button,
 };

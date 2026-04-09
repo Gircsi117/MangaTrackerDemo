@@ -7,18 +7,26 @@ import Navbar from "./Navbar";
 type ContainerProps = {
   children: React.ReactNode;
   withNavbar?: boolean;
+  noSroll?: boolean;
 };
 
 const Container: React.FC<ContainerProps> = ({
   children,
   withNavbar = false,
+  noSroll = false,
 }) => {
   return (
     <SafeAreaView
       style={styles.container}
       edges={withNavbar ? ["top"] : undefined}
     >
-      <ScrollView style={styles.scroll}>{children}</ScrollView>
+      {noSroll ? (
+        children
+      ) : (
+        <ScrollView contentContainerStyle={styles.scroll}>
+          {children}
+        </ScrollView>
+      )}
       {withNavbar && <Navbar />}
     </SafeAreaView>
   );

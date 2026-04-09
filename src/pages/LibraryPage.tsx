@@ -1,13 +1,45 @@
 import React from "react";
 import Container from "../components/Container";
-import { Text } from "react-native";
-import styles from "../styles/styles";
-import { LibraryPageProps } from "../types/navigation.types";
 
-const LibraryPage: React.FC<LibraryPageProps> = () => {
+import { LibraryPageProps } from "../types/navigation.type";
+import ToonVerseService from "../services/toonverse.service";
+import Button from "../components/Button";
+
+const LibraryPage: React.FC<LibraryPageProps> = ({ navigation }) => {
   return (
     <Container withNavbar>
-      <Text style={styles.text}>Library</Text>
+      <Button
+        onPress={() =>
+          navigation.navigate("Manga", {
+            slug: "solo-leveling",
+            service: ToonVerseService,
+          })
+        }
+      >
+        Solo Leveling
+      </Button>
+
+      <Button
+        onPress={() =>
+          navigation.navigate("Manga", {
+            slug: "shut-up-evil-dragon-i-dont-want-to-raise-a-child-with-you-anymore",
+            service: ToonVerseService,
+          })
+        }
+      >
+        Shut up Evil Dragon
+      </Button>
+
+      <Button
+        onPress={() =>
+          navigation.navigate("Manga", {
+            slug: "the-beginning-after-the-end",
+            service: ToonVerseService,
+          })
+        }
+      >
+        The Beginning After The End
+      </Button>
     </Container>
   );
 };
