@@ -4,6 +4,8 @@ import {
   Chapter,
   ChapterPage,
   ChapterSlug,
+  List,
+  ListParams,
   Manga,
   MangaPageConstructor,
 } from "../types/manga.type";
@@ -48,6 +50,53 @@ class MangaDexService extends MangaPage {
       return "Unknown";
     } catch (error) {
       return "Unknown";
+    }
+  }
+
+  public static async search(params: ListParams): Promise<List<Manga>> {
+    try {
+      const { limit = 20, offset = 0, query } = params;
+
+      const result = await MangaDexService.axios({
+        method: "GET",
+        url: "/manga",
+        params: {
+          title: params.query,
+          limit: params.limit ?? 20,
+          offset: params.offset ?? 0,
+          "includes[]": ["cover_art", "author"],
+        },
+      });
+
+      const mangas = result.data.data.map((item: any) => {
+        const { id, attributes, relationships } = item;
+
+        const coverArt = relationships.find((r: any) => r.type === "cover_art");
+        const fileName = coverArt?.attributes?.fileName;
+        const author = relationships.find((r: any) => r.type === "author");
+
+        const result: Manga = {
+          id,
+          slug: id,
+          title: attributes.title?.en || Object.values(attributes.title)[0],
+          description: attributes.description?.en || "",
+          coverUrl: `https://uploads.mangadex.org/covers/${id}/${fileName}.512.jpg`,
+          author: author?.attributes?.name || "Unknown",
+          type: attributes.publicationDemographic || "manga",
+        };
+
+        return result;
+      });
+
+      return {
+        items: mangas,
+        totalCount: result.data.total,
+      };
+    } catch (error) {
+      return {
+        items: [],
+        totalCount: 0,
+      };
     }
   }
 

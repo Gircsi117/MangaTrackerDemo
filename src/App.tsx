@@ -8,6 +8,7 @@ import HistoryPage from "./pages/HistoryPage";
 import MangaPage from "./pages/MangaPage";
 import ChapterPage from "./pages/ChapterPage";
 import BrowsingPage from "./pages/BrowsingPage";
+import SearchPage from "./pages/SearchPage";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -39,6 +40,10 @@ export default function App() {
 
           <Stack.Screen name="Browsing">
             {(props) => <BrowsingPage {...props} />}
+          </Stack.Screen>
+
+          <Stack.Screen name="Search">
+            {(props) => <SearchPage {...props} />}
           </Stack.Screen>
 
           <Stack.Screen name="Settings">

@@ -12,6 +12,7 @@ export type RootStackParamList = {
     service: MangaPageConstructor;
   };
   Browsing: undefined;
+  Search: { service: MangaPageConstructor };
 };
 
 export type HistoryPageProps = NativeStackScreenProps<
@@ -37,6 +38,11 @@ export type ChapterPageProps = NativeStackScreenProps<
 export type BrowsingPageProps = NativeStackScreenProps<
   RootStackParamList,
   "Browsing"
+>;
+
+export type SearchPageProps = NativeStackScreenProps<
+  RootStackParamList,
+  "Search"
 >;
 
 export type SettingsPageProps = NativeStackScreenProps<

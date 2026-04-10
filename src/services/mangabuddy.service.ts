@@ -4,6 +4,8 @@ import {
   Chapter,
   ChapterPage,
   ChapterSlug,
+  List,
+  ListParams,
   Manga,
   MangaPageConstructor,
 } from "../types/manga.type";
@@ -24,6 +26,87 @@ class MangaBuddyService extends MangaPage {
       "User-Agent": this.userAgent,
     },
   });
+
+  public static async search(params: ListParams): Promise<List<Manga>> {
+    try {
+      const { limit = 20, offset = 0, query } = params;
+
+      const res = await MangaBuddyService.axios({
+        method: "GET",
+        url: `/search`,
+        params: {
+          q: query,
+          page: offset + 1,
+          limit: limit,
+          offset: offset,
+        },
+      });
+
+      const root = parse(res.data);
+      const items = root.querySelectorAll(".book-detailed-item");
+
+      const paginationCount = root
+        .querySelector(".pagination")
+        ?.querySelectorAll("a");
+
+      const mangas = items.map((item) => {
+        const title =
+          item.querySelector("a")?.getAttribute("title") || "Unknown";
+        const slug =
+          item.querySelector("a")?.getAttribute("href")?.replace("/", "") || "";
+        const coverUrl =
+          item
+            .querySelector(".thumb")
+            ?.querySelector("a")
+            ?.querySelector("img")
+            ?.getAttribute("data-src") || "";
+        const description =
+          item.querySelector(".summary")?.querySelector("p")?.text.trim() || "";
+
+        const manga: Manga = {
+          id: slug,
+          slug,
+          title,
+          coverUrl,
+          author: "",
+          description,
+          type: "unknown",
+        };
+
+        return manga;
+      });
+
+      /*const items = root.querySelectorAll(".novel__item").map((el) => {
+        const anchor = el.querySelector(".novel__item-icon a");
+        const img = el.querySelector("img");
+        const slug = anchor?.getAttribute("href")?.replace("/", "") || "";
+        const title = anchor?.getAttribute("title") || "";
+        const coverUrl = img?.getAttribute("src") || "";
+
+        const manga: Manga = {
+          id: slug,
+          slug,
+          title,
+          coverUrl,
+          author: "",
+          description: "",
+          type: "unknown",
+        };
+
+        return manga;
+      });
+
+      return { items: items, totalCount: items.length };*/
+
+      return {
+        items: mangas,
+        totalCount: mangas.length * (paginationCount?.length ?? 0),
+      };
+    } catch (error) {
+      console.error(error);
+      return { items: [], totalCount: 0 };
+    }
+  }
 
   public async getManga(): Promise<Manga | null> {
     const res = await MangaBuddyService.axios({

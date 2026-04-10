@@ -4,6 +4,8 @@ import {
   Chapter,
   ChapterPage,
   ChapterSlug,
+  List,
+  ListParams,
   Manga,
   MangaPageConstructor,
 } from "../types/manga.type";
@@ -22,6 +24,56 @@ class AsuraScansService extends MangaPage {
       "User-Agent": this.userAgent,
     },
   });
+
+  public static async search(params: ListParams): Promise<List<Manga>> {
+    try {
+      const { limit = 20, offset = 0, query } = params;
+
+      const res = await axios({
+        method: "get",
+        url: "https://api.asurascans.com/api/search",
+        params: {
+          q: query,
+          limit: limit,
+          offset: offset,
+        },
+        headers: {
+          Referer: this.referer,
+          Origin: this.referer,
+          "User-Agent": this.userAgent,
+        },
+      });
+
+      const { data, meta } = res.data;
+      if (!data) return { items: [], totalCount: 0 };
+
+      const result = data.map((item: any) => {
+        const { id, slug, title, cover, description, type, author } = item;
+        const manga: Manga = {
+          id: id,
+          slug: slug,
+          title: title,
+          coverUrl: cover,
+          author: author,
+          type: type,
+          description: description,
+        };
+
+        return manga;
+      });
+
+      return {
+        items: result,
+        totalCount: meta.total,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        items: [],
+        totalCount: 0,
+      };
+    }
+  }
 
   public async getManga(): Promise<Manga | null> {
     try {

@@ -11,7 +11,7 @@ import styles from "../styles/styles";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Image as RNImage } from "expo-image";
 
-const BrowsingPage: React.FC<BrowsingPageProps> = () => {
+const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
   const services: { id: string; service: MangaPageConstructor }[] = [
     { id: uuidv4(), service: AsuraScansService },
     { id: uuidv4(), service: MangaBuddyService },
@@ -28,7 +28,7 @@ const BrowsingPage: React.FC<BrowsingPageProps> = () => {
           <TouchableOpacity
             key={id}
             style={styles.mangaServiceItem}
-            onPress={() => console.log(service.referer)}
+            onPress={() => navigation.navigate("Search", { service })}
           >
             <RNImage
               source={{
