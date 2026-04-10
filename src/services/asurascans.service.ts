@@ -29,7 +29,7 @@ class AsuraScansService extends MangaPage {
     try {
       const { limit = 20, offset = 0, query } = params;
 
-      const res = await axios({
+      /*const res = await axios({
         method: "get",
         url: "https://api.asurascans.com/api/search",
         params: {
@@ -65,6 +65,43 @@ class AsuraScansService extends MangaPage {
       return {
         items: result,
         totalCount: meta.total,
+      };*/
+
+      const res = await AsuraScansService.axios({
+        method: "GET",
+        url: `/browse`,
+        params: { q: query },
+      });
+
+      const root = parse(res.data);
+      const propsRaw = root
+        .querySelector("astro-island[props*='initialSeries']")
+        ?.getAttribute("props");
+
+      if (!propsRaw) return { items: [], totalCount: 0 };
+
+      const props = JSON.parse(propsRaw);
+      const totalCount = props.totalCount?.[1] ?? 0;
+      const series = props.initialSeries?.[1] ?? [];
+
+      const items = series.map((item: any) => {
+        const s = item[1];
+        const manga: Manga = {
+          id: String(s.id[1]),
+          slug: s.slug[1],
+          title: s.title[1],
+          coverUrl: s.cover[1],
+          author: s.author?.[1] || "Unknown",
+          description: s.description?.[1] || "",
+          type: s.type[1],
+        };
+
+        return manga;
+      });
+
+      return {
+        items: items,
+        totalCount: totalCount,
       };
     } catch (error) {
       console.error(error);

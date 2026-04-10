@@ -1,29 +1,54 @@
 import React, { use, useEffect, useState } from "react";
 import Container from "../components/Container";
 import { SearchPageProps } from "../types/navigation.type";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles from "../styles/styles";
 import { Manga } from "../types/manga.type";
 import { Image } from "expo-image";
+import Button from "../components/Button";
 
 const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
   const { service } = route.params;
+  const [query, setQuery] = useState("");
   const [mangas, setMangas] = useState<Manga[]>([]);
 
+  const search = async () => {
+    const result = await service.search({ query: query.trim() });
+
+    console.log(service.name, result);
+
+    setMangas(result.items);
+  };
+
   useEffect(() => {
-    const search = async () => {
-      const result = await service.search({ query: "solo" });
-      console.log(result);
-
-      setMangas(result.items);
-    };
-
     search();
   }, []);
 
   return (
     <Container withNavbar>
       <Text style={styles.text}>Search</Text>
+
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: 8,
+          marginBottom: 16,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <TextInput
+          value={query}
+          onChangeText={setQuery}
+          onSubmitEditing={search}
+          placeholder="Keresés..."
+          placeholderTextColor="#aaa"
+          returnKeyType="search"
+          style={styles.input}
+        />
+        <Button onPress={search}>Search</Button>
+      </View>
 
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
         {mangas.map((manga) => (

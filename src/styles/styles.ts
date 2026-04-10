@@ -69,7 +69,6 @@ const nav = StyleSheet.create({
 const button = StyleSheet.create({
   button: {
     alignSelf: "flex-start",
-    marginTop: 20,
     paddingVertical: 12,
     paddingHorizontal: 24,
     backgroundColor: colors.primary,
@@ -82,8 +81,24 @@ const button = StyleSheet.create({
   },
 });
 
+//*------------------------------------------------------------------------------------------------------------------
+//* Input
+//*------------------------------------------------------------------------------------------------------------------
+const input = StyleSheet.create({
+  input: {
+    flex: 1,
+    padding: 0,
+    backgroundColor: "#585858",
+    borderRadius: 8,
+    color: colors.font,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+  },
+});
+
 export default {
   ...base,
   ...nav,
   ...button,
+  ...input,
 };

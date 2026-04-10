@@ -36,7 +36,8 @@ class MangaBuddyService extends MangaPage {
         url: `/search`,
         params: {
           q: query,
-          page: offset + 1,
+          status: "all",
+          page: offset,
           limit: limit,
           offset: offset,
         },
@@ -45,9 +46,12 @@ class MangaBuddyService extends MangaPage {
       const root = parse(res.data);
       const items = root.querySelectorAll(".book-detailed-item");
 
-      const paginationCount = root
-        .querySelector(".pagination")
-        ?.querySelectorAll("a");
+      const paginationCount =
+        root
+          .querySelector(".paginator")
+          ?.querySelectorAll("a")
+          .pop()
+          ?.text.trim() || "1";
 
       const mangas = items.map((item) => {
         const title =
@@ -100,7 +104,7 @@ class MangaBuddyService extends MangaPage {
 
       return {
         items: mangas,
-        totalCount: mangas.length * (paginationCount?.length ?? 0),
+        totalCount: mangas.length * Number(paginationCount),
       };
     } catch (error) {
       console.error(error);
@@ -119,6 +123,7 @@ class MangaBuddyService extends MangaPage {
     const title = bookInfo?.querySelector("h1")?.text.trim() || "Unknown";
     const coverUrl =
       bookInfo?.querySelector("#cover img")?.getAttribute("data-src") || "";
+    const description = root.querySelector(".content")?.text.trim() || "";
 
     const manga: Manga = {
       id: uuidv4(),
@@ -126,7 +131,7 @@ class MangaBuddyService extends MangaPage {
       title,
       coverUrl,
       author: "Unknown",
-      description: "",
+      description,
       type: "unknown",
     };
 
