@@ -31,13 +31,15 @@ class MangaBuddyService extends MangaPage {
     try {
       const { limit = 20, offset = 0, query } = params;
 
+      const page = offset / limit + 1;
+
       const res = await MangaBuddyService.axios({
         method: "GET",
         url: `/search`,
         params: {
           q: query,
           status: "all",
-          page: offset,
+          page: page,
           limit: limit,
           offset: offset,
         },
@@ -80,28 +82,6 @@ class MangaBuddyService extends MangaPage {
         return manga;
       });
 
-      /*const items = root.querySelectorAll(".novel__item").map((el) => {
-        const anchor = el.querySelector(".novel__item-icon a");
-        const img = el.querySelector("img");
-        const slug = anchor?.getAttribute("href")?.replace("/", "") || "";
-        const title = anchor?.getAttribute("title") || "";
-        const coverUrl = img?.getAttribute("src") || "";
-
-        const manga: Manga = {
-          id: slug,
-          slug,
-          title,
-          coverUrl,
-          author: "",
-          description: "",
-          type: "unknown",
-        };
-
-        return manga;
-      });
-
-      return { items: items, totalCount: items.length };*/
-
       return {
         items: mangas,
         totalCount: mangas.length * Number(paginationCount),
@@ -113,29 +93,34 @@ class MangaBuddyService extends MangaPage {
   }
 
   public async getManga(): Promise<Manga | null> {
-    const res = await MangaBuddyService.axios({
-      method: "GET",
-      url: `/${this.slug}`,
-    });
-    const root = parse(res.data);
+    try {
+      const res = await MangaBuddyService.axios({
+        method: "GET",
+        url: `/${this.slug}`,
+      });
+      const root = parse(res.data);
 
-    const bookInfo = root.querySelector(".book-info");
-    const title = bookInfo?.querySelector("h1")?.text.trim() || "Unknown";
-    const coverUrl =
-      bookInfo?.querySelector("#cover img")?.getAttribute("data-src") || "";
-    const description = root.querySelector(".content")?.text.trim() || "";
+      const bookInfo = root.querySelector(".book-info");
+      const title = bookInfo?.querySelector("h1")?.text.trim() || "Unknown";
+      const coverUrl =
+        bookInfo?.querySelector("#cover img")?.getAttribute("data-src") || "";
+      const description = root.querySelector(".content")?.text.trim() || "";
 
-    const manga: Manga = {
-      id: uuidv4(),
-      slug: this.slug,
-      title,
-      coverUrl,
-      author: "Unknown",
-      description,
-      type: "unknown",
-    };
+      const manga: Manga = {
+        id: uuidv4(),
+        slug: this.slug,
+        title,
+        coverUrl,
+        author: "Unknown",
+        description,
+        type: "unknown",
+      };
 
-    return manga;
+      return manga;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
 
   public async getChapters(): Promise<Chapter[]> {

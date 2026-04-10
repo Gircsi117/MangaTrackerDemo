@@ -26,36 +26,42 @@ class ToonVerseService extends MangaPage {
 
   public static async search(params: ListParams): Promise<List<Manga>> {
     try {
-      const { limit = 20, query } = params;
+      const { limit = 20, offset = 0, query } = params;
 
-      const result = await ToonVerseService.axios({
+      const res = await ToonVerseService.axios({
         method: "GET",
-        url: `/series/search`,
+        url: `/series`,
         params: {
-          q: query,
+          search: query,
           limit: limit,
+          offset: offset,
+          sortBy: "popular",
+          timeRange: "all",
+          excludeAdult: true,
+          includePromotions: true,
+          semantic: true,
         },
       });
 
-      const data: any[] = result.data.data || [];
-      const items: Manga[] = [];
+      const { items, total } = res.data.data;
+      const mangas: Manga[] = [];
 
-      for (const item of data) {
-        const { id, slug, title, coverUrl } = item;
-        items.push({
+      for (const item of items) {
+        const { id, slug, title, coverUrl, type, author } = item;
+        mangas.push({
           id: id,
           slug: slug,
           title: title,
           coverUrl: coverUrl,
-          author: "",
-          type: "",
+          author: author,
+          type: type,
           description: "",
         });
       }
 
       return {
-        items: items,
-        totalCount: data.length,
+        items: mangas,
+        totalCount: total,
       };
     } catch (error) {
       return {

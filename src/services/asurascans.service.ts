@@ -29,48 +29,12 @@ class AsuraScansService extends MangaPage {
     try {
       const { limit = 20, offset = 0, query } = params;
 
-      /*const res = await axios({
-        method: "get",
-        url: "https://api.asurascans.com/api/search",
-        params: {
-          q: query,
-          limit: limit,
-          offset: offset,
-        },
-        headers: {
-          Referer: this.referer,
-          Origin: this.referer,
-          "User-Agent": this.userAgent,
-        },
-      });
-
-      const { data, meta } = res.data;
-      if (!data) return { items: [], totalCount: 0 };
-
-      const result = data.map((item: any) => {
-        const { id, slug, title, cover, description, type, author } = item;
-        const manga: Manga = {
-          id: id,
-          slug: slug,
-          title: title,
-          coverUrl: cover,
-          author: author,
-          type: type,
-          description: description,
-        };
-
-        return manga;
-      });
-
-      return {
-        items: result,
-        totalCount: meta.total,
-      };*/
+      const page = offset / limit + 1;
 
       const res = await AsuraScansService.axios({
         method: "GET",
         url: `/browse`,
-        params: { q: query },
+        params: { q: query, page: page },
       });
 
       const root = parse(res.data);

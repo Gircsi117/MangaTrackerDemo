@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const colors = {
   font: "#fff",
   primary: "#aa0093",
-};
+} as const;
 
 //*------------------------------------------------------------------------------------------------------------------
 //* Base
@@ -53,7 +53,6 @@ const nav = StyleSheet.create({
     gap: 8,
   },
   navbarItem: {
-    //backgroundColor: "red",
     width: 50,
     aspectRatio: "1/1",
     borderRadius: 8,

@@ -8,12 +8,14 @@ type ContainerProps = {
   children: React.ReactNode;
   withNavbar?: boolean;
   noSroll?: boolean;
+  scrollRef?: React.RefObject<ScrollView | null>;
 };
 
 const Container: React.FC<ContainerProps> = ({
   children,
   withNavbar = false,
   noSroll = false,
+  scrollRef,
 }) => {
   return (
     <SafeAreaView
@@ -23,7 +25,7 @@ const Container: React.FC<ContainerProps> = ({
       {noSroll ? (
         children
       ) : (
-        <ScrollView contentContainerStyle={styles.scroll}>
+        <ScrollView contentContainerStyle={styles.scroll} ref={scrollRef}>
           {children}
         </ScrollView>
       )}

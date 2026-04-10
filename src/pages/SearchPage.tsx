@@ -1,31 +1,41 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use, useCallback, useEffect, useRef, useState } from "react";
 import Container from "../components/Container";
 import { SearchPageProps } from "../types/navigation.type";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import styles from "../styles/styles";
+import {
+  FlatList,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import styles, { colors } from "../styles/styles";
 import { Manga } from "../types/manga.type";
-import { Image } from "expo-image";
+import { Image as RNImage } from "expo-image";
 import Button from "../components/Button";
+import useSearch from "../hooks/useSearch";
 
 const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
   const { service } = route.params;
-  const [query, setQuery] = useState("");
-  const [mangas, setMangas] = useState<Manga[]>([]);
+  const {
+    search,
+    query,
+    setQuery,
+    page,
+    totalPages,
+    mangas,
+    handleSearch,
+    handlePageChange,
+  } = useSearch(service);
 
-  const search = async () => {
-    const result = await service.search({ query: query.trim() });
-
-    console.log(service.name, result);
-
-    setMangas(result.items);
-  };
+  const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     search();
   }, []);
 
   return (
-    <Container withNavbar>
+    <Container withNavbar scrollRef={scrollRef}>
       <Text style={styles.text}>Search</Text>
 
       <View
@@ -41,13 +51,13 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
         <TextInput
           value={query}
           onChangeText={setQuery}
-          onSubmitEditing={search}
+          onSubmitEditing={handleSearch}
           placeholder="Keresés..."
           placeholderTextColor="#aaa"
           returnKeyType="search"
           style={styles.input}
         />
-        <Button onPress={search}>Search</Button>
+        <Button onPress={handleSearch}>Search</Button>
       </View>
 
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
@@ -62,7 +72,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
               })
             }
           >
-            <Image
+            <RNImage
               source={{
                 uri: manga.coverUrl,
                 headers: {
@@ -71,7 +81,10 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
                   "User-Agent": service.userAgent,
                 },
               }}
-              style={{ width: "100%", aspectRatio: "2/3", borderRadius: 8 }}
+              style={[
+                styles.image,
+                { width: "100%", aspectRatio: "2/3", borderRadius: 8 },
+              ]}
               contentFit="cover"
               recyclingKey={String(manga.id)}
             />
@@ -84,6 +97,39 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
+
+      {totalPages > 1 && (
+        <View style={{ marginTop: 16, marginBottom: 8 }}>
+          <Text style={[styles.text, { marginBottom: 8, color: "#aaa" }]}>
+            {page} / {totalPages} oldal
+          </Text>
+          <FlatList
+            horizontal
+            data={Array.from({ length: totalPages }, (_, i) => i + 1)}
+            keyExtractor={(p) => String(p)}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 8, marginTop: 16, marginBottom: 8 }}
+            renderItem={({ item: p }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  scrollRef.current?.scrollTo({ y: 0, animated: true });
+                  handlePageChange(p);
+                }}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 8,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: p === page ? colors.primary : "#585858",
+                }}
+              >
+                <Text style={styles.text}>{p}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      )}
     </Container>
   );
 };
