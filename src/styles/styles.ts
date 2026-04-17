@@ -53,13 +53,18 @@ const nav = StyleSheet.create({
     gap: 8,
   },
   navbarItem: {
-    width: 50,
+    width: 60,
     aspectRatio: "1/1",
     borderRadius: 8,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
+  navbarItemText:{
+    color: colors.font,
+    fontSize: 12,
+    textAlign: "center",
+  }
 });
 
 //*------------------------------------------------------------------------------------------------------------------

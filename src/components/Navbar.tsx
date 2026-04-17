@@ -12,11 +12,12 @@ import NavbarItem from "./NavbarItem";
 import { useNavigationState } from "@react-navigation/native";
 import { RootStackParamList } from "../types/navigation.type";
 
-const ICON_SIZE = 35;
+const ICON_SIZE = 25;
 
 type Item = {
   to: keyof RootStackParamList;
   icon: React.ReactElement<{ color: string }>;
+  title: string;
 };
 
 const Navbar = () => {
@@ -28,18 +29,22 @@ const Navbar = () => {
     {
       to: "Library",
       icon: <Ionicons name="library" size={ICON_SIZE} />,
+      title: "Library",
     },
     {
       to: "History",
       icon: <Fontisto name="history" size={ICON_SIZE} />,
+      title: "History",
     },
     {
       to: "Browsing",
       icon: <AntDesign name="compass" size={ICON_SIZE} />,
+      title: "Browsing",
     },
     {
       to: "Settings",
       icon: <MaterialIcons name="settings" size={ICON_SIZE} />,
+      title: "Settings",
     },
   ];
 
@@ -47,11 +52,7 @@ const Navbar = () => {
     <SafeAreaView style={styles.navbar} edges={["bottom"]}>
       <View style={styles.navbarInner}>
         {items.map((x) => (
-          <NavbarItem key={x.to} to={x.to}>
-            {React.cloneElement(x.icon, {
-              color: currentRoute == x.to ? colors.primary : "#fff",
-            })}
-          </NavbarItem>
+          <NavbarItem key={x.to} to={x.to} icon={x.icon} title={x.title} />
         ))}
       </View>
     </SafeAreaView>

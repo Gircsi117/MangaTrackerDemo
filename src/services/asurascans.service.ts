@@ -4,14 +4,14 @@ import {
   Chapter,
   ChapterPage,
   ChapterSlug,
-  List,
-  ListParams,
   Manga,
   MangaPageConstructor,
 } from "../types/manga.type";
 import { parse } from "node-html-parser";
+import { List, ListParams } from "../types/list.types";
 
 class AsuraScansService extends MangaPage {
+  public static readonly id = "asurascans";
   public static readonly name = "AsuraScans";
   private static readonly baseUrl = "https://asurascans.com";
   public static readonly referer = "https://asurascans.com/";

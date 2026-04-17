@@ -4,13 +4,13 @@ import {
   Chapter,
   ChapterPage,
   ChapterSlug,
-  List,
-  ListParams,
   Manga,
   MangaPageConstructor,
 } from "../types/manga.type";
+import { List, ListParams } from "../types/list.types";
 
 class ToonVerseService extends MangaPage {
+  public static readonly id = "toonverse";
   public static readonly name = "ToonVerse";
   private static readonly baseUrl = "https://api.toonverse.net/api";
   public static readonly referer = "https://toonverse.net/";
@@ -150,7 +150,6 @@ class ToonVerseService extends MangaPage {
           .map((x: any, i: number) => ({ index: i, ...x }))
           .map(async (x: any) => {
             const imageUrl = x.imageUrl;
-            //const { width, height } = await Image.getImageSize(imageUrl);
 
             const result: ChapterPage = {
               id: x.id,

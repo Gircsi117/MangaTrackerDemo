@@ -1,14 +1,12 @@
+import { List, ListParams } from "../types/list.types";
 import {
   Chapter,
   ChapterPage,
   ChapterSlug,
-  List,
-  ListParams,
   Manga,
 } from "../types/manga.type";
 
 abstract class MangaPage {
-  public static readonly name: string = "MangaPage";
   public static readonly logoUrl: string = "";
 
   protected slug: string;

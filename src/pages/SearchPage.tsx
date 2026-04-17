@@ -10,10 +10,10 @@ import {
   View,
 } from "react-native";
 import styles, { colors } from "../styles/styles";
-import { Manga } from "../types/manga.type";
 import { Image as RNImage } from "expo-image";
 import Button from "../components/Button";
 import useSearch from "../hooks/useSearch";
+import { Entypo } from "@expo/vector-icons";
 
 const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
   const { service } = route.params;
@@ -26,6 +26,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
     mangas,
     handleSearch,
     handlePageChange,
+    clearSearch,
   } = useSearch(service);
 
   const scrollRef = useRef<ScrollView>(null);
@@ -36,7 +37,26 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
 
   return (
     <Container withNavbar scrollRef={scrollRef}>
-      <Text style={styles.text}>Search</Text>
+      <View
+        style={[
+          styles.mangaServiceItem,
+          { marginBottom: 8, backgroundColor: "transparent" },
+        ]}
+      >
+        <RNImage
+          source={{
+            uri: service.logoUrl,
+            headers: {
+              Referer: service.referer,
+              "User-Agent": service.userAgent,
+            },
+          }}
+          style={{ width: 50, aspectRatio: 1 }}
+        />
+        <Text style={[styles.text, { fontSize: 16, fontWeight: "bold" }]}>
+          {service.name}
+        </Text>
+      </View>
 
       <View
         style={{
@@ -57,7 +77,11 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
           returnKeyType="search"
           style={styles.input}
         />
-        <Button onPress={handleSearch}>Search</Button>
+        {query && (
+          <Button onPress={clearSearch} style={{ width: 60 }}>
+            <Entypo name="cross" size={24} color={colors.font} />
+          </Button>
+        )}
       </View>
 
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>

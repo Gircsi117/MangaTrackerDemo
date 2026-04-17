@@ -5,6 +5,8 @@ import { Chapter, Manga } from "../types/manga.type";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Image as RNImage } from "expo-image";
 import styles from "../styles/styles";
+import Button from "../components/Button";
+import { Ionicons } from "@expo/vector-icons";
 
 const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
   const { slug, service } = route.params;
@@ -62,6 +64,16 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
       <Text style={[styles.text, { lineHeight: 22, marginBottom: 16 }]}>
         {manga?.description}
       </Text>
+
+      {chapters.length > 0 && (
+        <Button
+          onPress={() => setChapters((old) => [...old].reverse())}
+          style={{ marginBottom: 12, marginLeft: "auto" }}
+        >
+          <Ionicons name="swap-vertical" size={24} color="#fff" />
+        </Button>
+      )}
+
       {chapters.map((chapter) => (
         <TouchableOpacity
           key={chapter.id}

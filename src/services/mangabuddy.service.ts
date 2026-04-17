@@ -4,15 +4,15 @@ import {
   Chapter,
   ChapterPage,
   ChapterSlug,
-  List,
-  ListParams,
   Manga,
   MangaPageConstructor,
 } from "../types/manga.type";
 import { parse } from "node-html-parser";
 import { v4 as uuidv4 } from "uuid";
+import { List, ListParams } from "../types/list.types";
 
 class MangaBuddyService extends MangaPage {
+  public static readonly id = "mangabuddy";
   public static readonly name = "MangaBuddy";
   private static readonly baseUrl = "https://mangabuddy.com";
   public static readonly referer = "https://mangabuddy.com/";

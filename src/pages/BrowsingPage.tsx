@@ -10,13 +10,15 @@ import ToonVerseService from "../services/toonverse.service";
 import styles from "../styles/styles";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Image as RNImage } from "expo-image";
+import PadlizsanFanSubService from "../services/padlizsanfansub.service";
 
 const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
-  const services: { id: string; service: MangaPageConstructor }[] = [
-    { id: uuidv4(), service: AsuraScansService },
-    { id: uuidv4(), service: MangaBuddyService },
-    { id: uuidv4(), service: MangaDexService },
-    { id: uuidv4(), service: ToonVerseService },
+  const services: MangaPageConstructor[] = [
+    AsuraScansService,
+    MangaBuddyService,
+    MangaDexService,
+    ToonVerseService,
+    PadlizsanFanSubService,
   ];
 
   return (
@@ -24,9 +26,9 @@ const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
       <Text style={styles.text}>Browsing</Text>
 
       <View style={{ display: "flex", gap: 8 }}>
-        {services.map(({ id, service }) => (
+        {services.map((service) => (
           <TouchableOpacity
-            key={id}
+            key={service.id}
             style={styles.mangaServiceItem}
             onPress={() => navigation.navigate("Search", { service })}
           >

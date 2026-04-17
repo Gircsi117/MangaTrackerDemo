@@ -13,6 +13,7 @@ export type RootStackParamList = {
   };
   Browsing: undefined;
   Search: { service: MangaPageConstructor };
+  Credentials: undefined;
 };
 
 export type HistoryPageProps = NativeStackScreenProps<
@@ -48,4 +49,9 @@ export type SearchPageProps = NativeStackScreenProps<
 export type SettingsPageProps = NativeStackScreenProps<
   RootStackParamList,
   "Settings"
+>;
+
+export type CredentialsPageProps = NativeStackScreenProps<
+  RootStackParamList,
+  "Credentials"
 >;

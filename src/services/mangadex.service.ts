@@ -4,14 +4,14 @@ import {
   Chapter,
   ChapterPage,
   ChapterSlug,
-  List,
-  ListParams,
   Manga,
   MangaPageConstructor,
 } from "../types/manga.type";
 import { v4 as uuidv4 } from "uuid";
+import { List, ListParams } from "../types/list.types";
 
 class MangaDexService extends MangaPage {
+  public static readonly id = "mangadex";
   public static readonly name = "MangaDex_HU";
   private static readonly baseUrl = "https://api.mangadex.org";
   public static readonly referer = "https://mangadex.org/";

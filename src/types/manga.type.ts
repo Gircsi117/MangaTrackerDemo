@@ -1,24 +1,14 @@
 import MangaPage from "../modules/manga-page.module";
-
-export type List<T = any> = {
-  items: T[];
-  totalCount: number;
-};
+import { List, ListParams } from "./list.types";
 
 export type MangaPageConstructor = {
   new (slug: string): MangaPage;
+  readonly id: string;
   readonly name: string;
   readonly userAgent: string;
   readonly referer: string;
   readonly logoUrl: string;
   search(params?: ListParams): Promise<List<Manga>>;
-};
-
-export type ListParams = {
-  limit?: number;
-  offset?: number;
-  order?: "asc" | "desc";
-  query?: string;
 };
 
 export type Manga = {

@@ -9,8 +9,12 @@ import MangaPage from "./pages/MangaPage";
 import ChapterPage from "./pages/ChapterPage";
 import BrowsingPage from "./pages/BrowsingPage";
 import SearchPage from "./pages/SearchPage";
+import useCredentialsStore from "./stores/credentials.store";
+import CredentialsPage from "./pages/CredentialsPage";
+import Toast from "react-native-toast-message";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+useCredentialsStore.getState().load();
 
 export default function App() {
   const DEFAULT_PAGE: keyof RootStackParamList = "Library";
@@ -49,8 +53,13 @@ export default function App() {
           <Stack.Screen name="Settings">
             {(props) => <SettingsPage {...props} />}
           </Stack.Screen>
+
+          <Stack.Screen name="Credentials">
+            {(props) => <CredentialsPage {...props} />}
+          </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
+      <Toast />
       <StatusBar style="auto" />
     </>
   );
