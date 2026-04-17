@@ -2,6 +2,7 @@ import axios from "axios";
 import MangaPage from "../modules/manga-page.module";
 import {
   Chapter,
+  ChapterContent,
   ChapterPage,
   ChapterSlug,
   Manga,
@@ -78,6 +79,8 @@ class AsuraScansService extends MangaPage {
 
   public async getManga(): Promise<Manga | null> {
     try {
+      if (this.manga) return this.manga;
+
       const res = await AsuraScansService.axios.get(`/comics/${this.slug}`);
       const root = parse(res.data);
 
@@ -89,7 +92,7 @@ class AsuraScansService extends MangaPage {
 
       const props = JSON.parse(propsRaw);
 
-      const manga: Manga = {
+      this.manga = {
         id: this.slug,
         slug: this.slug,
         title: props.title[1],
@@ -99,7 +102,7 @@ class AsuraScansService extends MangaPage {
         type: props.type[1],
       };
 
-      return manga;
+      return this.manga;
     } catch (error) {
       console.error(error);
       return null;
@@ -108,6 +111,8 @@ class AsuraScansService extends MangaPage {
 
   public async getChapters(): Promise<Chapter[]> {
     try {
+      if (this.chapters.length) return this.chapters;
+
       const res = await AsuraScansService.axios.get(`/comics/${this.slug}`);
       const root = parse(res.data);
 
@@ -119,7 +124,7 @@ class AsuraScansService extends MangaPage {
 
       const props = JSON.parse(propsRaw);
 
-      return props.chapters[1].map((chapter: any) => ({
+      const chapters: Chapter[] = props.chapters[1].map((chapter: any) => ({
         id: String(chapter[1].id[1]),
         slug: String(chapter[1].number[1]),
         title: chapter?.[1].title?.[1] || `Chapter ${chapter[1].number[1]}`,
@@ -127,16 +132,19 @@ class AsuraScansService extends MangaPage {
         publishedAt: chapter?.[1].published_at?.[1]
           ? new Date(chapter?.[1].published_at?.[1])
           : null,
-      })) as Chapter[];
+      }));
+
+      this.chapters = chapters;
+      return chapters;
     } catch (error) {
       console.error(error);
       return [];
     }
   }
 
-  public async getChapterPages(
+  public async getChapterContent(
     chapterSlug: ChapterSlug,
-  ): Promise<ChapterPage[]> {
+  ): Promise<ChapterContent> {
     try {
       const res = await AsuraScansService.axios.get(
         `/comics/${this.slug}/chapter/${chapterSlug}`,
@@ -147,24 +155,48 @@ class AsuraScansService extends MangaPage {
         .querySelector("astro-island[props*='pages']")
         ?.getAttribute("props");
 
-      if (!propsRaw) return [];
+      if (!propsRaw)
+        return {
+          pages: [],
+          currentChapter: null,
+          nextChapter: null,
+          prevChapter: null,
+        };
 
       const props = JSON.parse(propsRaw);
 
-      return props.pages[1].map((page: any, index: number) => {
-        const chapterPage: ChapterPage = {
-          id: String(index),
-          index,
-          imageUrl: page[1].url?.[1] ?? "",
-          width: page[1]?.width?.[1] ?? 2,
-          height: page[1]?.height?.[1] ?? 3,
-        };
+      const pages: ChapterPage[] = props.pages[1].map(
+        (page: any, index: number) => {
+          const chapterPage: ChapterPage = {
+            id: String(index),
+            index,
+            imageUrl: page[1].url?.[1] ?? "",
+            width: page[1]?.width?.[1] ?? 2,
+            height: page[1]?.height?.[1] ?? 3,
+          };
 
-        return chapterPage;
-      });
+          return chapterPage;
+        },
+      );
+
+      const curr = await this.getRelativeChapter(chapterSlug, +0);
+      const next = await this.getRelativeChapter(chapterSlug, +1);
+      const prev = await this.getRelativeChapter(chapterSlug, -1);
+
+      return {
+        pages: pages,
+        currentChapter: curr,
+        nextChapter: next,
+        prevChapter: next,
+      };
     } catch (error) {
       console.error(error);
-      return [];
+      return {
+        pages: [],
+        currentChapter: null,
+        nextChapter: null,
+        prevChapter: null,
+      };
     }
   }
 }

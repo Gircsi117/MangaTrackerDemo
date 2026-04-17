@@ -3,6 +3,7 @@ import MangaPage from "../modules/manga-page.module";
 import { List, ListParams } from "../types/list.types";
 import {
   Chapter,
+  ChapterContent,
   ChapterPage,
   ChapterSlug,
   Manga,
@@ -130,6 +131,8 @@ class PadlizsanFanSubService extends MangaPage {
 
   public async getManga(): Promise<Manga | null> {
     try {
+      if (this.manga) return this.manga;
+
       const res = await PadlizsanFanSubService.axios({
         method: "GET",
         url: `/manga/${this.slug}`,
@@ -137,7 +140,7 @@ class PadlizsanFanSubService extends MangaPage {
 
       const data = res.data;
 
-      const manga: Manga = {
+      this.manga = {
         id: uuidv4(),
         slug: data.slug,
         title: data.title,
@@ -147,7 +150,7 @@ class PadlizsanFanSubService extends MangaPage {
         description: (data.description || "").replace(/<br>/g, "\n"),
       };
 
-      return manga;
+      return this.manga;
     } catch (error) {
       return null;
     }
@@ -155,6 +158,8 @@ class PadlizsanFanSubService extends MangaPage {
 
   public async getChapters(): Promise<Chapter[]> {
     try {
+      if (this.chapters.length) return this.chapters;
+
       const res = await PadlizsanFanSubService.axios.get(
         `/chapters/${this.slug}`,
       );
@@ -175,15 +180,16 @@ class PadlizsanFanSubService extends MangaPage {
           return chapter;
         });
 
-      return chapters;
+      this.chapters = chapters.reverse();
+      return this.chapters;
     } catch (error) {
       return [];
     }
   }
 
-  public async getChapterPages(
+  public async getChapterContent(
     chapterSlug: ChapterSlug,
-  ): Promise<ChapterPage[]> {
+  ): Promise<ChapterContent> {
     try {
       const res = await PadlizsanFanSubService.axios.get(
         `/pages/${this.slug}/${chapterSlug}`,
@@ -204,9 +210,23 @@ class PadlizsanFanSubService extends MangaPage {
         return page;
       });
 
-      return pages;
+      const curr = await this.getRelativeChapter(chapterSlug, +0);
+      const next = await this.getRelativeChapter(chapterSlug, +1);
+      const prev = await this.getRelativeChapter(chapterSlug, -1);
+
+      return {
+        pages,
+        currentChapter: curr,
+        nextChapter: next,
+        prevChapter: prev,
+      };
     } catch (error) {
-      return [];
+      return {
+        pages: [],
+        currentChapter: null,
+        nextChapter: null,
+        prevChapter: null,
+      };
     }
   }
 }

@@ -2,6 +2,7 @@ import axios from "axios";
 import MangaPage from "../modules/manga-page.module";
 import {
   Chapter,
+  ChapterContent,
   ChapterPage,
   ChapterSlug,
   Manga,
@@ -94,6 +95,8 @@ class MangaBuddyService extends MangaPage {
 
   public async getManga(): Promise<Manga | null> {
     try {
+      if (this.manga) return this.manga;
+
       const res = await MangaBuddyService.axios({
         method: "GET",
         url: `/${this.slug}`,
@@ -106,7 +109,7 @@ class MangaBuddyService extends MangaPage {
         bookInfo?.querySelector("#cover img")?.getAttribute("data-src") || "";
       const description = root.querySelector(".content")?.text.trim() || "";
 
-      const manga: Manga = {
+      this.manga = {
         id: uuidv4(),
         slug: this.slug,
         title,
@@ -116,7 +119,7 @@ class MangaBuddyService extends MangaPage {
         type: "unknown",
       };
 
-      return manga;
+      return this.manga;
     } catch (error) {
       console.error(error);
       return null;
@@ -125,6 +128,8 @@ class MangaBuddyService extends MangaPage {
 
   public async getChapters(): Promise<Chapter[]> {
     try {
+      if (this.chapters.length) return this.chapters;
+
       const res = await MangaBuddyService.axios({
         method: "GET",
         url: `/${this.slug}`,
@@ -142,18 +147,21 @@ class MangaBuddyService extends MangaPage {
           publishedAt: null,
         }));
 
-      return chapterList
+      const chapters = chapterList
         .filter((chapter) => !!chapter.slug)
         .sort((a, b) => b.number - a.number) as Chapter[];
+
+      this.chapters = chapters;
+      return chapters;
     } catch (error) {
       console.error(error);
       return [];
     }
   }
 
-  public async getChapterPages(
+  public async getChapterContent(
     chapterSlug: ChapterSlug,
-  ): Promise<ChapterPage[]> {
+  ): Promise<ChapterContent> {
     try {
       const res = await MangaBuddyService.axios({
         method: "GET",
@@ -161,18 +169,46 @@ class MangaBuddyService extends MangaPage {
       });
 
       const match = res.data.match(/var chapImages = '([^']+)'/);
-      if (!match) return [];
+      if (!match)
+        return {
+          pages: [],
+          currentChapter: null,
+          nextChapter: null,
+          prevChapter: null,
+        };
 
-      return match[1].split(",").map((url: string, index: number) => ({
-        id: String(index),
-        index,
-        imageUrl: url.trim(),
-        width: 2,
-        height: 3,
-      })) as ChapterPage[];
+      const pages: ChapterPage[] = match[1]
+        .split(",")
+        .map((url: string, index: number) => {
+          const page: ChapterPage = {
+            id: String(index),
+            index,
+            imageUrl: url.trim(),
+            width: 2,
+            height: 3,
+          };
+
+          return page;
+        });
+
+      const curr = await this.getRelativeChapter(chapterSlug, +0);
+      const next = await this.getRelativeChapter(chapterSlug, +1);
+      const prev = await this.getRelativeChapter(chapterSlug, -1);
+
+      return {
+        pages,
+        currentChapter: curr,
+        nextChapter: next,
+        prevChapter: prev,
+      };
     } catch (error) {
       console.error(error);
-      return [];
+      return {
+        pages: [],
+        currentChapter: null,
+        nextChapter: null,
+        prevChapter: null,
+      };
     }
   }
 }

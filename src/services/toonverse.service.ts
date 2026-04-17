@@ -2,12 +2,14 @@ import MangaPage from "../modules/manga-page.module";
 import axios from "axios";
 import {
   Chapter,
+  ChapterContent,
   ChapterPage,
   ChapterSlug,
   Manga,
   MangaPageConstructor,
 } from "../types/manga.type";
 import { List, ListParams } from "../types/list.types";
+import { v4 as uuidv4 } from "uuid";
 
 class ToonVerseService extends MangaPage {
   public static readonly id = "toonverse";
@@ -101,8 +103,9 @@ class ToonVerseService extends MangaPage {
 
   public async getChapters(): Promise<Chapter[]> {
     try {
-      const manga = await this.getManga();
+      if (this.chapters.length) return this.chapters;
 
+      const manga = await this.getManga();
       if (!manga) return [];
 
       const result = await ToonVerseService.axios({
@@ -117,7 +120,7 @@ class ToonVerseService extends MangaPage {
 
       const { chapters = [] } = result.data.data;
 
-      return chapters.map(
+      const items: Chapter[] = chapters.map(
         (x: any) =>
           ({
             id: x.id,
@@ -127,15 +130,18 @@ class ToonVerseService extends MangaPage {
             publishedAt: x.publishedAt ? new Date(x.publishedAt) : null,
           }) as Chapter,
       );
+
+      this.chapters = items;
+      return items;
     } catch (error) {
       console.error(error);
       return [];
     }
   }
 
-  public async getChapterPages(
+  public async getChapterContent(
     chapterSlug: ChapterSlug,
-  ): Promise<ChapterPage[]> {
+  ): Promise<ChapterContent> {
     try {
       const result = await ToonVerseService.axios({
         method: "GET",
@@ -145,29 +151,42 @@ class ToonVerseService extends MangaPage {
       const { chapter } = result.data.data;
       const { pages = [] } = chapter;
 
-      const withSize: ChapterPage[] = await Promise.all(
-        pages
-          .map((x: any, i: number) => ({ index: i, ...x }))
-          .map(async (x: any) => {
-            const imageUrl = x.imageUrl;
+      const withSize: ChapterPage[] = pages
+        .map((x: any, i: number) => ({ index: i, ...x }))
+        .map((x: any) => {
+          const imageUrl = x.imageUrl;
 
-            const result: ChapterPage = {
-              id: x.id,
-              index: x.index,
-              imageUrl,
-              width: 2,
-              height: 3,
-            };
+          const result: ChapterPage = {
+            id: x.id,
+            index: x.index,
+            imageUrl,
+            width: 2,
+            height: 3,
+          };
 
-            return result;
-          }),
-      );
+          return result;
+        })
+        .sort((a: ChapterPage, b: ChapterPage) => a.index - b.index);
 
-      return withSize.sort((a, b) => a.index - b.index);
+      const curr = await this.getRelativeChapter(chapterSlug, +0);
+      const next = await this.getRelativeChapter(chapterSlug, +1);
+      const prev = await this.getRelativeChapter(chapterSlug, -1);
+
+      return {
+        pages: withSize,
+        currentChapter: curr,
+        nextChapter: next,
+        prevChapter: prev,
+      };
     } catch (error) {
       console.error(error);
 
-      return [];
+      return {
+        pages: [],
+        currentChapter: null,
+        nextChapter: null,
+        prevChapter: null,
+      };
     }
   }
 }

@@ -2,6 +2,7 @@ import axios from "axios";
 import MangaPage from "../modules/manga-page.module";
 import {
   Chapter,
+  ChapterContent,
   ChapterPage,
   ChapterSlug,
   Manga,
@@ -102,6 +103,8 @@ class MangaDexService extends MangaPage {
 
   public async getManga(): Promise<Manga | null> {
     try {
+      if (this.manga) return this.manga;
+
       const result = await MangaDexService.axios({
         method: "GET",
         url: `/manga/${this.slug}`,
@@ -121,7 +124,7 @@ class MangaDexService extends MangaPage {
       const author = relationships.find((r: any) => r.type === "author");
       const authorName = author?.attributes?.name;
 
-      const manga: Manga = {
+      this.manga = {
         id: id as string,
         slug: this.slug,
         title: this.getTitle(altTitles),
@@ -131,7 +134,7 @@ class MangaDexService extends MangaPage {
         author: authorName || "Unknown Author",
       };
 
-      return manga;
+      return this.manga;
     } catch (error) {
       console.error(error);
       return null;
@@ -140,6 +143,8 @@ class MangaDexService extends MangaPage {
 
   public async getChapters(): Promise<Chapter[]> {
     try {
+      if (this.chapters.length) return this.chapters;
+
       const result = await MangaDexService.axios({
         method: "GET",
         url: `/manga/${this.slug}/feed`,
@@ -166,6 +171,7 @@ class MangaDexService extends MangaPage {
         });
       }
 
+      this.chapters = items;
       return items;
     } catch (error) {
       console.error(error);
@@ -174,16 +180,15 @@ class MangaDexService extends MangaPage {
     }
   }
 
-  public async getChapterPages(
+  public async getChapterContent(
     chapterSlug: ChapterSlug,
-  ): Promise<ChapterPage[]> {
+  ): Promise<ChapterContent> {
     try {
-      const result = await MangaDexService.axios({
-        method: "GET",
-        url: `/at-home/server/${chapterSlug}`,
-      });
+      const [serverResult] = await Promise.all([
+        MangaDexService.axios.get(`/at-home/server/${chapterSlug}`),
+      ]);
 
-      const data = result.data;
+      const data = serverResult.data;
       const { baseUrl, chapter } = data;
 
       const pages: ChapterPage[] = chapter.data.map(
@@ -200,11 +205,25 @@ class MangaDexService extends MangaPage {
         },
       );
 
-      return pages;
+      const curr = await this.getRelativeChapter(chapterSlug, +0);
+      const next = await this.getRelativeChapter(chapterSlug, +1);
+      const prev = await this.getRelativeChapter(chapterSlug, -1);
+
+      return {
+        pages,
+        currentChapter: curr,
+        nextChapter: next,
+        prevChapter: prev,
+      };
     } catch (error) {
       console.error(error);
 
-      return [];
+      return {
+        pages: [],
+        currentChapter: null,
+        nextChapter: null,
+        prevChapter: null,
+      };
     }
   }
 }

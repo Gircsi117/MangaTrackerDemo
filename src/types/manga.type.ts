@@ -38,3 +38,10 @@ export type ChapterPage = {
   width: number;
   height: number;
 };
+
+export type ChapterContent = {
+  pages: ChapterPage[];
+  currentChapter: Chapter | null;
+  nextChapter: Chapter | null;
+  prevChapter: Chapter | null;
+};

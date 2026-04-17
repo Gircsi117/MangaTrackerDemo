@@ -23,8 +23,6 @@ const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
 
   return (
     <Container withNavbar>
-      <Text style={styles.text}>Browsing</Text>
-
       <View style={{ display: "flex", gap: 8 }}>
         {services.map((service) => (
           <TouchableOpacity
