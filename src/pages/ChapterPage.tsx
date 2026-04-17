@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Container from "../components/Container";
 import { ChapterPageProps } from "../types/navigation.type";
 import { Chapter, ChapterPage as ChapterPageType } from "../types/manga.type";
@@ -8,6 +8,7 @@ import Button from "../components/Button";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MangaPage from "../modules/manga-page.module";
 import styles from "../styles/styles";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
 
 const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const { slug, chapterSlug, service } = route.params;
@@ -21,9 +22,9 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const [showControls, setShowControls] = useState(false);
 
   const insets = useSafeAreaInsets();
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<FlashListRef<ChapterPageType>>(null);
 
-  const getPages = async () => {
+  const getPages = useCallback(async () => {
     const page = pageRef.current!;
     const { pages, currentChapter, nextChapter, prevChapter } =
       await page.getChapterContent(chapterSlug);
@@ -32,32 +33,37 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
     setCurrentChapter(currentChapter ?? null);
     setNextChapter(nextChapter ?? null);
     setPrevChapter(prevChapter ?? null);
-  };
+  }, [chapterSlug]);
 
-  const clear = () => {
+  const clear = useCallback(() => {
     setPages([]);
     setCurrentChapter(null);
     setNextChapter(null);
     setPrevChapter(null);
     setShowControls(false);
-  };
+  }, []);
 
   useEffect(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
-    pageRef.current = pageRef.current ?? new service(slug);
-
-    console.log(chapterSlug);
+    if (!pageRef.current) {
+      pageRef.current = new service(slug);
+    }
 
     getPages();
   }, [chapterSlug]);
 
+  const pageSizes = useRef<Record<string, { width: number; height: number }>>(
+    {},
+  );
+  const updateTimeout = useRef<number | null>(null);
+
   return (
     <Container noSroll>
-      <FlatList
-        ref={flatListRef}
+      <FlashList
         data={pages}
+        ref={flatListRef}
         keyExtractor={(page) => page.id}
-        renderItem={({ item: page }) => (
+        renderItem={({ item: page, index }) => (
           <RNImage
             source={{
               uri: page.imageUrl,
@@ -71,15 +77,23 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
               height: undefined,
               aspectRatio: `${page.width}/${page.height}`,
             }}
+            priority={index < 3 ? "high" : "normal"}
             contentFit="contain"
             recyclingKey={page.id}
             onLoad={(e) => {
               const { width, height } = e.source;
-              setPages((prev) =>
-                prev.map((p) =>
-                  p.id === page.id ? { ...p, width, height } : p,
-                ),
-              );
+              pageSizes.current[page.id] = { width, height };
+
+              if (updateTimeout.current) clearTimeout(updateTimeout.current);
+              updateTimeout.current = setTimeout(() => {
+                setPages((prev) =>
+                  prev.map((p) =>
+                    pageSizes.current[p.id]
+                      ? { ...p, ...pageSizes.current[p.id] }
+                      : p,
+                  ),
+                );
+              }, 100);
             }}
             onTouchEnd={() => setShowControls((old) => !old)}
           />

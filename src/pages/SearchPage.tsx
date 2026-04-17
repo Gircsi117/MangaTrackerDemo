@@ -111,6 +111,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
               ]}
               contentFit="cover"
               recyclingKey={String(manga.id)}
+              transition={300}
             />
             <Text
               style={[styles.text, { marginTop: 4, fontSize: 12 }]}
