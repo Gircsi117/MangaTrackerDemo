@@ -33,6 +33,10 @@ class MangaDexService extends MangaPage {
     this.lang = "hu";
   }
 
+  get mangaUrl(): string {
+    return `${MangaDexService.referer}title/${this.slug}`;
+  }
+
   private getTitle(titles: { [key: string]: string }[]): string {
     try {
       const keys = [

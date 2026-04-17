@@ -45,6 +45,10 @@ class PadlizsanFanSubService extends MangaPage {
     return instance;
   })();
 
+  get mangaUrl(): string {
+    return `${PadlizsanFanSubService.referer}chapters.html?slug=${this.slug}`;
+  }
+
   private static setUrl(url: string) {
     if (url.startsWith("http")) return url;
     return `${PadlizsanFanSubService.baseUrl}${url}`;

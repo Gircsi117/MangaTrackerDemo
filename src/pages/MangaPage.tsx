@@ -6,7 +6,8 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { Image as RNImage } from "expo-image";
 import styles from "../styles/styles";
 import Button from "../components/Button";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Feather } from "@expo/vector-icons";
+import { Linking } from "react-native";
 
 const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
   const { slug, service } = route.params;
@@ -31,6 +32,27 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
 
   return (
     <Container withNavbar>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: 8,
+          marginBottom: 8,
+        }}
+      >
+        <Button
+          onPress={() => navigation.navigate("Search", { service })}
+          style={{ flex: 1 }}
+        >
+          <Ionicons name="search" size={24} color="#fff" />
+        </Button>
+        <Button
+          onPress={() => Linking.openURL(new service(slug).mangaUrl)}
+          style={{ flex: 1 }}
+        >
+          <Feather name="external-link" size={24} color="#fff" />
+        </Button>
+      </View>
       <RNImage
         source={{
           uri: manga?.coverUrl,

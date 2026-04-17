@@ -21,6 +21,8 @@ abstract class MangaPage {
     this.slug = slug;
   }
 
+  abstract get mangaUrl(): string;
+
   public static async search(params: ListParams): Promise<List<Manga>> {
     return {
       items: [],

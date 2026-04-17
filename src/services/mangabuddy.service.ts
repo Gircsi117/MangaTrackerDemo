@@ -28,6 +28,10 @@ class MangaBuddyService extends MangaPage {
     },
   });
 
+  get mangaUrl(): string {
+    return `${MangaBuddyService.referer}${this.slug}`;
+  }
+
   public static async search(params: ListParams): Promise<List<Manga>> {
     try {
       const { limit = 20, offset = 0, query } = params;
