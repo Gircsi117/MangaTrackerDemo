@@ -4,7 +4,7 @@ import { MangaPageProps } from "../types/navigation.type";
 import { Chapter, Manga } from "../types/manga.type";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Image as RNImage } from "expo-image";
-import styles from "../styles/styles";
+import styles, { colors } from "../styles/styles";
 import Button from "../components/Button";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { Linking } from "react-native";
@@ -44,13 +44,13 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
           onPress={() => navigation.navigate("Search", { service })}
           style={{ flex: 1 }}
         >
-          <Ionicons name="search" size={24} color="#fff" />
+          <Ionicons name="search" size={24} color={colors.font} />
         </Button>
         <Button
           onPress={() => Linking.openURL(new service(slug).mangaUrl)}
           style={{ flex: 1 }}
         >
-          <Feather name="external-link" size={24} color="#fff" />
+          <Feather name="external-link" size={24} color={colors.font} />
         </Button>
       </View>
       <RNImage

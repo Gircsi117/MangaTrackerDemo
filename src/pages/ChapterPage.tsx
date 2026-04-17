@@ -3,10 +3,11 @@ import Container from "../components/Container";
 import { ChapterPageProps } from "../types/navigation.type";
 import { Chapter, ChapterPage as ChapterPageType } from "../types/manga.type";
 import { Image as RNImage } from "expo-image";
-import { FlatList } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import Button from "../components/Button";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MangaPage from "../modules/manga-page.module";
+import styles from "../styles/styles";
 
 const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const { slug, chapterSlug, service } = route.params;
@@ -22,25 +23,30 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
 
-  useEffect(() => {
+  const getPages = async () => {
+    const page = pageRef.current!;
+    const { pages, currentChapter, nextChapter, prevChapter } =
+      await page.getChapterContent(chapterSlug);
+
+    setPages(pages);
+    setCurrentChapter(currentChapter ?? null);
+    setNextChapter(nextChapter ?? null);
+    setPrevChapter(prevChapter ?? null);
+  };
+
+  const clear = () => {
     setPages([]);
-    setShowControls(false);
     setCurrentChapter(null);
     setNextChapter(null);
     setPrevChapter(null);
+    setShowControls(false);
+  };
+
+  useEffect(() => {
     flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
     pageRef.current = pageRef.current ?? new service(slug);
 
-    const getPages = async () => {
-      const page = pageRef.current!;
-      const { pages, currentChapter, nextChapter, prevChapter } =
-        await page.getChapterContent(chapterSlug);
-
-      setPages(pages);
-      setCurrentChapter(currentChapter ?? null);
-      setNextChapter(nextChapter ?? null);
-      setPrevChapter(prevChapter ?? null);
-    };
+    console.log(chapterSlug);
 
     getPages();
   }, [chapterSlug]);
@@ -80,17 +86,27 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
         )}
       />
 
-      <Button
+      <View
         style={{
           display: showControls ? "flex" : "none",
           position: "absolute",
-          top: insets.top + 8,
-          left: 8,
+          top: insets.top,
+          left: 0,
+          padding: 8,
+          backgroundColor: "#0000008a",
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
         }}
-        onPress={() => navigation.navigate("Manga", { slug, service })}
       >
-        Back
-      </Button>
+        <Button onPress={() => navigation.navigate("Manga", { slug, service })}>
+          Back
+        </Button>
+        <Text style={[styles.text, { flex: 1, textAlign: "center" }]}>
+          {currentChapter?.title}
+        </Text>
+      </View>
       {prevChapter && (
         <Button
           style={{
@@ -99,13 +115,14 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
             bottom: insets.bottom + 8,
             left: 8,
           }}
-          onPress={() =>
+          onPress={() => {
+            clear();
             navigation.navigate("Chapter", {
               slug,
               service,
               chapterSlug: prevChapter.slug,
-            })
-          }
+            });
+          }}
         >
           Prev
         </Button>
@@ -118,13 +135,14 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
             bottom: insets.bottom + 8,
             right: 8,
           }}
-          onPress={() =>
+          onPress={() => {
+            clear();
             navigation.navigate("Chapter", {
               slug,
               service,
               chapterSlug: nextChapter.slug,
-            })
-          }
+            });
+          }}
         >
           Next
         </Button>
