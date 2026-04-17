@@ -23,6 +23,10 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
 
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlashListRef<ChapterPageType>>(null);
+  const pageSizes = useRef<Record<string, { width: number; height: number }>>(
+    {},
+  );
+  const updateTimeout = useRef<number | null>(null);
 
   const getPages = useCallback(async () => {
     const page = pageRef.current!;
@@ -41,6 +45,7 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
     setNextChapter(null);
     setPrevChapter(null);
     setShowControls(false);
+    pageSizes.current = {};
   }, []);
 
   useEffect(() => {
@@ -51,11 +56,6 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
 
     getPages();
   }, [chapterSlug]);
-
-  const pageSizes = useRef<Record<string, { width: number; height: number }>>(
-    {},
-  );
-  const updateTimeout = useRef<number | null>(null);
 
   return (
     <Container noSroll>

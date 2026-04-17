@@ -67,6 +67,7 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
         }}
         contentFit="contain"
         recyclingKey={manga?.id}
+        transition={300}
         onLoad={(e) => {
           const { width, height } = e.source;
           setAspectRatio(`${width}/${height}`);
@@ -109,6 +110,7 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
         >
           <View
             style={{
+              flex: 1,
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
@@ -119,11 +121,20 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
               borderRadius: 8,
             }}
           >
-            <Text style={styles.text}>
-              {chapter.number}. {chapter.title}
+            <Text
+              style={[styles.text, { flex: 1, marginRight: 8 }]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {chapter.number}. | {chapter.title}
             </Text>
             {chapter.publishedAt && (
-              <Text style={[styles.text, { color: "#aaa", fontSize: 12 }]}>
+              <Text
+                style={[
+                  styles.text,
+                  { color: "#aaa", fontSize: 12, flexShrink: 0 },
+                ]}
+              >
                 {new Date(chapter.publishedAt).toLocaleDateString("hu-HU")}
               </Text>
             )}

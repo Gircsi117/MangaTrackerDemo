@@ -3,20 +3,21 @@ import Container from "../components/Container";
 import { BrowsingPageProps } from "../types/navigation.type";
 import { MangaPageConstructor } from "../types/manga.type";
 import AsuraScansService from "../services/asurascans.service";
-import { v4 as uuidv4 } from "uuid";
 import MangaBuddyService from "../services/mangabuddy.service";
-import MangaDexService from "../services/mangadex.service";
+import MangaDexHuService from "../services/mangadex-hu.service";
 import ToonVerseService from "../services/toonverse.service";
 import styles from "../styles/styles";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Image as RNImage } from "expo-image";
 import PadlizsanFanSubService from "../services/padlizsanfansub.service";
+import MangaDexEnService from "../services/mangadex-en.service";
 
 const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
   const services: MangaPageConstructor[] = [
     AsuraScansService,
     MangaBuddyService,
-    MangaDexService,
+    MangaDexHuService,
+    MangaDexEnService,
     ToonVerseService,
     PadlizsanFanSubService,
   ];

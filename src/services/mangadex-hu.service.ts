@@ -11,9 +11,9 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { List, ListParams } from "../types/list.types";
 
-class MangaDexService extends MangaPage {
-  public static readonly id = "mangadex";
-  public static readonly name = "MangaDex_HU";
+class MangaDexHuService extends MangaPage {
+  public static readonly id: string = "mangadex-hu";
+  public static readonly name: string = "MangaDexHU";
   private static readonly baseUrl = "https://api.mangadex.org";
   public static readonly referer = "https://mangadex.org/";
   public static readonly logoUrl =
@@ -26,7 +26,7 @@ class MangaDexService extends MangaPage {
       "User-Agent": this.userAgent,
     },
   });
-  private readonly lang: string;
+  protected lang: string;
 
   constructor(slug: string) {
     super(slug);
@@ -34,7 +34,7 @@ class MangaDexService extends MangaPage {
   }
 
   get mangaUrl(): string {
-    return `${MangaDexService.referer}title/${this.slug}`;
+    return `${MangaDexHuService.referer}title/${this.slug}`;
   }
 
   private getTitle(titles: { [key: string]: string }[]): string {
@@ -62,7 +62,7 @@ class MangaDexService extends MangaPage {
     try {
       const { limit = 20, offset = 0, query } = params;
 
-      const result = await MangaDexService.axios({
+      const result = await MangaDexHuService.axios({
         method: "GET",
         url: "/manga",
         params: {
@@ -109,7 +109,7 @@ class MangaDexService extends MangaPage {
     try {
       if (this.manga) return this.manga;
 
-      const result = await MangaDexService.axios({
+      const result = await MangaDexHuService.axios({
         method: "GET",
         url: `/manga/${this.slug}`,
         params: {
@@ -149,7 +149,7 @@ class MangaDexService extends MangaPage {
     try {
       if (this.chapters.length) return this.chapters;
 
-      const result = await MangaDexService.axios({
+      const result = await MangaDexHuService.axios({
         method: "GET",
         url: `/manga/${this.slug}/feed`,
         params: {
@@ -189,7 +189,7 @@ class MangaDexService extends MangaPage {
   ): Promise<ChapterContent> {
     try {
       const [serverResult] = await Promise.all([
-        MangaDexService.axios.get(`/at-home/server/${chapterSlug}`),
+        MangaDexHuService.axios.get(`/at-home/server/${chapterSlug}`),
       ]);
 
       const data = serverResult.data;
@@ -232,5 +232,5 @@ class MangaDexService extends MangaPage {
   }
 }
 
-MangaDexService satisfies MangaPageConstructor;
-export default MangaDexService;
+MangaDexHuService satisfies MangaPageConstructor;
+export default MangaDexHuService;
