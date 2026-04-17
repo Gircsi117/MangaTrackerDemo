@@ -151,13 +151,17 @@ class AsuraScansService extends MangaPage {
 
       const props = JSON.parse(propsRaw);
 
-      return props.pages[1].map((page: any, index: number) => ({
-        id: String(index),
-        index,
-        imageUrl: page[1].url[1],
-        width: page[1].width[1],
-        height: page[1].height[1],
-      })) as ChapterPage[];
+      return props.pages[1].map((page: any, index: number) => {
+        const chapterPage: ChapterPage = {
+          id: String(index),
+          index,
+          imageUrl: page[1].url?.[1] ?? "",
+          width: page[1]?.width?.[1] ?? 2,
+          height: page[1]?.height?.[1] ?? 3,
+        };
+
+        return chapterPage;
+      });
     } catch (error) {
       console.error(error);
       return [];
