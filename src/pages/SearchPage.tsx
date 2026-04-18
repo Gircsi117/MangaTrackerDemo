@@ -77,11 +77,13 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
           returnKeyType="search"
           style={styles.input}
         />
-        {query && (
-          <Button onPress={clearSearch} style={{ width: 60 }}>
-            <Entypo name="cross" size={24} color={colors.font} />
-          </Button>
-        )}
+
+        <Button
+          onPress={clearSearch}
+          style={{ display: query ? "flex" : "none", width: 60 }}
+        >
+          <Entypo name="cross" size={18} color={colors.font} />
+        </Button>
       </View>
 
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>

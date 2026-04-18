@@ -11,6 +11,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { Image as RNImage } from "expo-image";
 import PadlizsanFanSubService from "../services/padlizsanfansub.service";
 import MangaDexEnService from "../services/mangadex-en.service";
+import NHentaiService from "../services/nhentai.service";
 
 const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
   const services: MangaPageConstructor[] = [
@@ -20,7 +21,8 @@ const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
     MangaDexEnService,
     ToonVerseService,
     PadlizsanFanSubService,
-  ];
+    NHentaiService,
+  ].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <Container withNavbar>

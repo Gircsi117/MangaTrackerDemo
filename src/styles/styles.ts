@@ -73,14 +73,16 @@ const nav = StyleSheet.create({
 const button = StyleSheet.create({
   button: {
     alignSelf: "flex-start",
+    justifyContent: "center",
     paddingVertical: 12,
-    paddingHorizontal: 24,
+    paddingHorizontal: 12,
     backgroundColor: colors.primary,
     borderRadius: 8,
+    height: 45,
   },
   buttonText: {
     color: colors.font,
-    fontSize: 16,
+    fontSize: 12,
     textAlign: "center",
   },
 });
@@ -97,6 +99,8 @@ const input = StyleSheet.create({
     color: colors.font,
     paddingVertical: 12,
     paddingHorizontal: 12,
+    fontSize: 12,
+    height: 45,
   },
 });
 
