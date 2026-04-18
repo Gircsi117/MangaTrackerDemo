@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { MangaPageConstructor } from "../types/manga.type";
 import { Manga } from "../types/manga.type";
 
@@ -27,29 +27,45 @@ const useSearch = (service: MangaPageConstructor): UseSearchResult => {
   const [totalCount, setTotalCount] = useState(0);
   const [mangas, setMangas] = useState<Manga[]>([]);
 
-  const totalPages = Math.ceil(totalCount / limit);
+  const queryRef = useRef(query);
+  const pageRef = useRef(page);
+  const limitRef = useRef(limit);
 
-  const search = useCallback(
-    async (
-      currentPage: number = page,
-      currentLimit: number = limit,
-      currentQuery: string = query,
-    ) => {
-      const { items, totalCount } = await service.search({
-        query: currentQuery.trim(),
-        limit: currentLimit,
-        offset: (currentPage - 1) * currentLimit,
-      });
+  useEffect(() => { queryRef.current = query; }, [query]);
+  useEffect(() => { pageRef.current = page; }, [page]);
+  useEffect(() => { limitRef.current = limit; }, [limit]);
 
-      if (currentPage === 1 && items.length !== currentLimit) {
-        setLimit(items.length);
-      }
+  const totalPages = Math.ceil(totalCount / limitRef.current);
 
-      setMangas(items);
-      setTotalCount(totalCount);
-    },
-    [query, page, limit, service],
-  );
+  const search = useCallback(async (
+    currentPage: number = pageRef.current,
+    currentLimit: number = limitRef.current,
+    currentQuery: string = queryRef.current,
+  ) => {
+    const { items, totalCount } = await service.search({
+      query: currentQuery.trim(),
+      limit: currentLimit,
+      offset: (currentPage - 1) * currentLimit,
+    });
+
+    if (currentPage === 1 && items.length !== currentLimit) {
+      setLimit(items.length);
+    }
+
+    setMangas(items);
+    setTotalCount(totalCount);
+  }, []);
+
+  const handleSearch = useCallback(() => {
+    setPage(1);
+    setLimit(DEFAULT_LIMIT);
+    search(1, DEFAULT_LIMIT);
+  }, []);
+
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage);
+    search(newPage);
+  }, []);
 
   const clearSearch = useCallback(() => {
     setQuery("");
@@ -58,21 +74,7 @@ const useSearch = (service: MangaPageConstructor): UseSearchResult => {
     setTotalCount(0);
     setMangas([]);
     search(1, DEFAULT_LIMIT, "");
-  }, [search]);
-
-  const handleSearch = useCallback(() => {
-    setLimit(DEFAULT_LIMIT);
-    setPage(1);
-    search(1, DEFAULT_LIMIT);
-  }, [search]);
-
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      setPage(newPage);
-      search(newPage);
-    },
-    [search],
-  );
+  }, []);
 
   return {
     query,
