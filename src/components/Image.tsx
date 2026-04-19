@@ -18,19 +18,17 @@ const Image: React.FC<Props> = ({
     <RNImage
       {...props}
       contentFit={props.contentFit || "contain"}
-      style={[{ aspectRatio: aspectRatio }, styles.image, props.style]}
+      style={[{ aspectRatio }, styles.image, props.style]}
       allowDownscaling={props.allowDownscaling || false}
       onLoad={(e) => {
         if (autoResize) {
           const { width, height } = e.source;
-
-          console.log(height);
-          
-
           if (width && height) {
             const ratio = width / height;
 
-            if (Math.abs(ratio - aspectRatio) > 0.005) setAspectRatio(ratio);
+            if (Math.abs(ratio - aspectRatio) > 0.005) {
+              setAspectRatio(ratio);
+            }
           }
         }
         props.onLoad?.(e);

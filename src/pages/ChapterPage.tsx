@@ -61,7 +61,13 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
       <FlashList
         data={pages}
         ref={flashListRef}
-        drawDistance={height * 50}
+        drawDistance={height * 3}
+        getItemType={(page) => {
+          const ratio = page.width / page.height;
+          if (ratio > 1) return "landscape";
+          if (ratio < 0.6) return "tall";
+          return "portrait";
+        }}
         keyExtractor={(page) => page.id}
         renderItem={({ item: page, index }) => (
           <PageImage
