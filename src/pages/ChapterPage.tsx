@@ -7,7 +7,8 @@ import Button from "../components/Button";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MangaPage from "../modules/manga-page.module";
 import styles from "../styles/styles";
-import Image from "../components/Image";
+import { ImageLoadEventData } from "expo-image";
+import PageImage from "../components/PageImage";
 
 const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const { slug, chapterSlug, service } = route.params;
@@ -53,35 +54,36 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   }, [chapterSlug]);
 
   const toggleControls = useCallback(() => setShowControls((old) => !old), []);
-  
+
+  const handleLoad = useCallback(
+    (page: ChapterPageType) => (e: ImageLoadEventData) => {
+      const { width, height } = e.source;
+
+      pageSizes.current[page.id] = { width, height };
+
+      if (updateTimeout.current) clearTimeout(updateTimeout.current);
+      updateTimeout.current = setTimeout(() => {
+        setPages((prev) =>
+          prev.map((p) =>
+            pageSizes.current[p.id] ? { ...p, ...pageSizes.current[p.id] } : p,
+          ),
+        );
+      }, 100);
+    },
+    [],
+  );
+
   const renderItem = useCallback(
     ({ item: page, index }: { item: ChapterPageType; index: number }) => (
-      <Image
-        transition={200}
-        recyclingKey={page.id}
-        source={{ uri: page.imageUrl, headers: service.headers }}
-        style={{ aspectRatio: page.width / page.height }}
-        priority={index < 3 ? "high" : "normal"}
-        onLoad={(e) => {
-          const { width, height } = e.source;
-
-          pageSizes.current[page.id] = { width, height };
-
-          if (updateTimeout.current) clearTimeout(updateTimeout.current);
-          updateTimeout.current = setTimeout(() => {
-            setPages((prev) =>
-              prev.map((p) =>
-                pageSizes.current[p.id]
-                  ? { ...p, ...pageSizes.current[p.id] }
-                  : p,
-              ),
-            );
-          }, 100);
-        }}
+      <PageImage
+        page={page}
+        index={index}
+        service={service}
         onTouchEnd={toggleControls}
+        onLoad={handleLoad(page)}
       />
     ),
-    [pages, toggleControls],
+    [pages, toggleControls, handleLoad],
   );
 
   return (
