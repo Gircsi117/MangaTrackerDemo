@@ -5,9 +5,8 @@ export type MangaPageConstructor = {
   new (slug: string): MangaPage;
   readonly id: string;
   readonly name: string;
-  readonly userAgent: string;
-  readonly referer: string;
   readonly logoUrl: string;
+  readonly headers: typeof MangaPage.headers;
   search(params?: ListParams): Promise<List<Manga>>;
 };
 

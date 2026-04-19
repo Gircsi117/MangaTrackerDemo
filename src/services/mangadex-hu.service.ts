@@ -15,16 +15,14 @@ class MangaDexHuService extends MangaPage {
   public static readonly id: string = "mangadex-hu";
   public static readonly name: string = "MangaDexHU";
   private static readonly baseUrl = "https://api.mangadex.org";
-  public static readonly referer = "https://mangadex.org/";
+  protected static readonly origin = "https://mangadex.org";
+  protected static readonly referer = "https://mangadex.org/";
   public static readonly logoUrl =
     "https://mangadex.org/pwa/icons/icon-192.png";
 
   private static readonly axios = axios.create({
     baseURL: this.baseUrl,
-    headers: {
-      Referer: this.referer,
-      "User-Agent": this.userAgent,
-    },
+    headers: this.headers,
   });
   protected lang: string;
 

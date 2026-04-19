@@ -15,36 +15,17 @@ import { v4 as uuidv4 } from "uuid";
 class NHentaiService extends MangaPage {
   public static readonly id: string = "nhentai";
   public static readonly name: string = "NHentai";
-  private static readonly baseUrl = "https://nhentai.net";
-  public static readonly referer: string = "https://nhentai.net/";
+  protected static readonly origin = "https://nhentai.net";
+  protected static readonly referer: string = "https://nhentai.net/";
   public static readonly logoUrl: string = "https://nhentai.net/logo.svg";
 
   private static readonly axios = axios.create({
-    baseURL: this.baseUrl,
-    headers: {
-      Referer: this.referer,
-      "User-Agent": this.userAgent,
-    },
+    baseURL: this.origin,
+    headers: this.headers,
   });
 
   public get mangaUrl(): string {
-    return `https://nhentai.net/g/${this.slug}`;
-  }
-
-  private async getChapterPage(): Promise<HTMLElement | null> {
-    try {
-      const res = await NHentaiService.axios({
-        method: "GET",
-        url: `/g/${this.slug}`,
-      });
-
-      const root = parse(res.data);
-
-      return root;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
+    return `${NHentaiService.origin}/g/${this.slug}`;
   }
 
   public static async search(params: ListParams): Promise<List<Manga>> {

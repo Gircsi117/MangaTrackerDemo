@@ -14,14 +14,24 @@ abstract class MangaPage {
   protected manga: Manga | null = null;
   protected chapters: Chapter[] = [];
 
-  public static readonly userAgent =
+  abstract get mangaUrl(): string;
+
+  protected static readonly origin: string;
+  protected static readonly referer: string;
+  private static readonly userAgent =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
+  public static get headers() {
+    return {
+      Origin: this.origin,
+      Referer: this.referer,
+      "User-Agent": this.userAgent,
+    };
+  }
 
   constructor(slug: string) {
     this.slug = slug;
   }
-
-  abstract get mangaUrl(): string;
 
   public static async search(params: ListParams): Promise<List<Manga>> {
     return {

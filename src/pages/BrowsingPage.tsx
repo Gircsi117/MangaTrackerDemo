@@ -36,10 +36,7 @@ const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
             <RNImage
               source={{
                 uri: service.logoUrl,
-                headers: {
-                  Referer: service.referer,
-                  "User-Agent": service.userAgent,
-                },
+                headers: service.headers,
               }}
               style={{ width: 50, aspectRatio: 1 }}
             />

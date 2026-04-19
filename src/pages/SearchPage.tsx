@@ -46,10 +46,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
         <RNImage
           source={{
             uri: service.logoUrl,
-            headers: {
-              Referer: service.referer,
-              "User-Agent": service.userAgent,
-            },
+            headers: service.headers,
           }}
           style={{ width: 50, aspectRatio: 1 }}
         />
@@ -101,11 +98,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
             <RNImage
               source={{
                 uri: manga.coverUrl,
-                headers: {
-                  Origin: service.referer,
-                  Referer: service.referer,
-                  "User-Agent": service.userAgent,
-                },
+                headers: service.headers,
               }}
               style={[
                 styles.image,

@@ -16,18 +16,14 @@ import { Image as RNImage } from "react-native";
 class PadlizsanFanSubService extends MangaPage {
   public static readonly id = "padlizsanfansub";
   public static readonly name = "PadlizsanFanSub";
-  private static readonly baseUrl = "https://padlizsanfansub.hu";
-  public static readonly referer = "https://padlizsanfansub.hu/";
+  protected static readonly origin = "https://padlizsanfansub.hu";
+  protected static readonly referer = "https://padlizsanfansub.hu/";
   public static readonly logoUrl = "https://padlizsanfansub.hu/assets/logo.png";
 
   private static readonly axios = (() => {
     const instance = axios.create({
-      baseURL: PadlizsanFanSubService.baseUrl + "/api",
-      headers: {
-        Referer: PadlizsanFanSubService.referer,
-        Origin: PadlizsanFanSubService.referer,
-        "User-Agent": MangaPage.userAgent,
-      },
+      baseURL: PadlizsanFanSubService.origin + "/api",
+      headers: this.headers,
       withCredentials: true,
     });
 
@@ -52,7 +48,7 @@ class PadlizsanFanSubService extends MangaPage {
 
   private static setUrl(url: string) {
     if (url.startsWith("http")) return url;
-    return `${PadlizsanFanSubService.baseUrl}${url}`;
+    return `${PadlizsanFanSubService.origin}${url}`;
   }
 
   private static async login() {
@@ -62,12 +58,8 @@ class PadlizsanFanSubService extends MangaPage {
     if (!credentials) return;
 
     const instance = axios.create({
-      baseURL: PadlizsanFanSubService.baseUrl + "/api",
-      headers: {
-        Referer: PadlizsanFanSubService.referer,
-        Origin: PadlizsanFanSubService.referer,
-        "User-Agent": MangaPage.userAgent,
-      },
+      baseURL: PadlizsanFanSubService.origin + "/api",
+      headers: this.headers,
       withCredentials: true,
     });
 
@@ -207,7 +199,7 @@ class PadlizsanFanSubService extends MangaPage {
         const page: ChapterPage = {
           id: uuidv4(),
           index: index,
-          imageUrl: `${PadlizsanFanSubService.baseUrl}/api/image/${folder}/${this.slug}/${chapterSlug}/${item}`,
+          imageUrl: `${PadlizsanFanSubService.origin}/api/image/${folder}/${this.slug}/${chapterSlug}/${item}`,
           width: 2,
           height: 3,
         };

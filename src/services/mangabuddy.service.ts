@@ -15,17 +15,14 @@ import { List, ListParams } from "../types/list.types";
 class MangaBuddyService extends MangaPage {
   public static readonly id = "mangabuddy";
   public static readonly name = "MangaBuddy";
-  private static readonly baseUrl = "https://mangabuddy.com";
+  protected static readonly origin = "https://mangabuddy.com";
   public static readonly referer = "https://mangabuddy.com/";
   public static readonly logoUrl =
     "https://mangabuddy.com/static/sites/mangabuddy/icons/android-chrome-192x192.png";
 
   private static readonly axios = axios.create({
-    baseURL: this.baseUrl,
-    headers: {
-      Referer: this.referer,
-      "User-Agent": this.userAgent,
-    },
+    baseURL: this.origin,
+    headers: this.headers,
   });
 
   get mangaUrl(): string {

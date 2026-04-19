@@ -14,16 +14,13 @@ import { List, ListParams } from "../types/list.types";
 class AsuraScansService extends MangaPage {
   public static readonly id = "asurascans";
   public static readonly name = "AsuraScans";
-  private static readonly baseUrl = "https://asurascans.com";
-  public static readonly referer = "https://asurascans.com/";
+  protected static readonly origin = "https://asurascans.com";
+  protected static readonly referer = "https://asurascans.com/";
   public static readonly logoUrl = "https://asurascans.com/images/logo.webp";
 
   private static readonly axios = axios.create({
-    baseURL: this.baseUrl,
-    headers: {
-      Referer: this.referer,
-      "User-Agent": this.userAgent,
-    },
+    baseURL: this.origin,
+    headers: this.headers,
   });
 
   get mangaUrl(): string {

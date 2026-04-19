@@ -14,16 +14,13 @@ import { v4 as uuidv4 } from "uuid";
 class ToonVerseService extends MangaPage {
   public static readonly id = "toonverse";
   public static readonly name = "ToonVerse";
-  private static readonly baseUrl = "https://api.toonverse.net/api";
-  public static readonly referer = "https://toonverse.net/";
+  protected static readonly origin = "https://api.toonverse.net";
+  protected static readonly referer = "https://toonverse.net/";
   public static readonly logoUrl = "https://toonverse.net/logo.png";
 
   private static readonly axios = axios.create({
-    baseURL: this.baseUrl,
-    headers: {
-      Referer: this.referer,
-      "User-Agent": this.userAgent,
-    },
+    baseURL: this.origin + "/api",
+    headers: this.headers,
   });
 
   get mangaUrl(): string {
