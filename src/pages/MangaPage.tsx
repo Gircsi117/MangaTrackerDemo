@@ -52,6 +52,7 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
         </Button>
       </View>
       <Image
+        autoResize
         source={{
           uri: manga?.coverUrl,
           headers: service.headers,

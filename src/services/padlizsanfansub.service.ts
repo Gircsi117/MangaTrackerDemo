@@ -203,8 +203,8 @@ class PadlizsanFanSubService extends MangaPage {
           id: uuidv4(),
           index: index,
           imageUrl: `${PadlizsanFanSubService.origin}/api/image/${folder}/${this.slug}/${chapterSlug}/${item}`,
-          width: 1,
-          height: 17,
+          width: 2,
+          height: 3,
         };
 
         return page;

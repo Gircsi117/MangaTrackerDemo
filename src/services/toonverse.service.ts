@@ -9,17 +9,17 @@ import {
   MangaPageConstructor,
 } from "../types/manga.type";
 import { List, ListParams } from "../types/list.types";
-import { v4 as uuidv4 } from "uuid";
 
 class ToonVerseService extends MangaPage {
   public static readonly id = "toonverse";
   public static readonly name = "ToonVerse";
-  protected static readonly origin = "https://api.toonverse.net";
+  protected static readonly baseUrl = "https://api.toonverse.net";
+  protected static readonly origin = "https://toonverse.net";
   protected static readonly referer = "https://toonverse.net/";
   public static readonly logoUrl = "https://toonverse.net/logo.png";
 
   private static readonly axios = axios.create({
-    baseURL: this.origin + "/api",
+    baseURL: this.baseUrl + "/api",
     headers: this.headers,
   });
 
@@ -67,6 +67,8 @@ class ToonVerseService extends MangaPage {
         totalCount: total,
       };
     } catch (error) {
+      console.error(error);
+
       return {
         items: [],
         totalCount: 0,

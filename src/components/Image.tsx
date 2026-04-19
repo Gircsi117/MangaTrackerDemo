@@ -24,10 +24,13 @@ const Image: React.FC<Props> = ({
         if (autoResize) {
           const { width, height } = e.source;
 
+          console.log(height);
+          
+
           if (width && height) {
             const ratio = width / height;
 
-            if (Math.abs(ratio - aspectRatio) > 0.01) setAspectRatio(ratio);
+            if (Math.abs(ratio - aspectRatio) > 0.005) setAspectRatio(ratio);
           }
         }
         props.onLoad?.(e);
