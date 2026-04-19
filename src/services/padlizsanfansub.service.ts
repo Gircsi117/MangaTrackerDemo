@@ -119,6 +119,7 @@ class PadlizsanFanSubService extends MangaPage {
         totalCount: searched.length,
       };
     } catch (error) {
+      console.error(error);
       return {
         items: [],
         totalCount: 0,
@@ -149,6 +150,7 @@ class PadlizsanFanSubService extends MangaPage {
 
       return this.manga;
     } catch (error) {
+      console.error(error);
       return null;
     }
   }
@@ -180,6 +182,7 @@ class PadlizsanFanSubService extends MangaPage {
       this.chapters = chapters.reverse();
       return this.chapters;
     } catch (error) {
+      console.error(error);
       return [];
     }
   }
@@ -200,8 +203,8 @@ class PadlizsanFanSubService extends MangaPage {
           id: uuidv4(),
           index: index,
           imageUrl: `${PadlizsanFanSubService.origin}/api/image/${folder}/${this.slug}/${chapterSlug}/${item}`,
-          width: 2,
-          height: 3,
+          width: 1,
+          height: 17,
         };
 
         return page;
@@ -212,12 +215,13 @@ class PadlizsanFanSubService extends MangaPage {
       const prev = await this.getRelativeChapter(chapterSlug, -1);
 
       return {
-        pages,
+        pages: pages,
         currentChapter: curr,
         nextChapter: next,
         prevChapter: prev,
       };
     } catch (error) {
+      console.error(error);
       return {
         pages: [],
         currentChapter: null,

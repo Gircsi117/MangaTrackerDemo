@@ -62,6 +62,7 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
         data={pages}
         ref={flashListRef}
         drawDistance={height * 5}
+        //removeClippedSubviews={true}
         keyExtractor={(page) => page.id}
         renderItem={({ item: page, index }) => (
           <PageImage

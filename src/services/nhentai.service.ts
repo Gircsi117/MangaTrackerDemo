@@ -147,8 +147,6 @@ class NHentaiService extends MangaPage {
         },
       );
 
-      console.log("pages", pages);
-
       return {
         pages: pages,
         currentChapter: null,

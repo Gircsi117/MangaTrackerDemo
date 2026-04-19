@@ -17,7 +17,7 @@ const Image: React.FC<Props> = ({
   return (
     <RNImage
       {...props}
-      contentFit={props.contentFit || "cover"}
+      contentFit={props.contentFit || "contain"}
       style={[{ aspectRatio: aspectRatio }, styles.image, props.style]}
       allowDownscaling={props.allowDownscaling || false}
       onLoad={(e) => {
@@ -26,6 +26,7 @@ const Image: React.FC<Props> = ({
 
           if (width && height) {
             const ratio = width / height;
+
             if (Math.abs(ratio - aspectRatio) > 0.01) setAspectRatio(ratio);
           }
         }
