@@ -22,10 +22,7 @@ const PageImage: React.FC<Props> = React.memo(
         onTouchEnd={onTouchEnd}
         source={{
           uri: page.imageUrl,
-          headers: {
-            Referer: service.referer,
-            "User-Agent": service.userAgent,
-          },
+          headers: service.headers,
         }}
       />
     );

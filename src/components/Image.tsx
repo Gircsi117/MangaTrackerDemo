@@ -1,5 +1,6 @@
 import { Image as RNImage, ImageProps } from "expo-image";
 import { useEffect, useState } from "react";
+import styles from "../styles/styles";
 
 type Props = ImageProps & {
   defaultAspectRatio?: number;
@@ -7,19 +8,17 @@ type Props = ImageProps & {
 };
 
 const Image: React.FC<Props> = ({
-  defaultAspectRatio,
+  defaultAspectRatio = 2 / 3,
   autoResize = false,
   ...props
 }) => {
-  const [aspectRatio, setAspectRatio] = useState<number>(
-    defaultAspectRatio || 2 / 3,
-  );
+  const [aspectRatio, setAspectRatio] = useState<number>(defaultAspectRatio);
 
   return (
     <RNImage
       {...props}
-      contentFit={props.contentFit || "fill"}
-      style={[props.style, { aspectRatio: aspectRatio, flex: 1 }]}
+      contentFit={props.contentFit || "cover"}
+      style={[{ aspectRatio: aspectRatio }, styles.image, props.style]}
       allowDownscaling={props.allowDownscaling || false}
       onLoad={(e) => {
         if (autoResize) {

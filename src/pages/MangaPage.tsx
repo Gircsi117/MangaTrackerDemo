@@ -3,19 +3,17 @@ import Container from "../components/Container";
 import { MangaPageProps } from "../types/navigation.type";
 import { Chapter, Manga } from "../types/manga.type";
 import { Text, TouchableOpacity, View } from "react-native";
-import { Image as RNImage } from "expo-image";
 import styles, { colors } from "../styles/styles";
 import Button from "../components/Button";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { Linking } from "react-native";
+import Image from "../components/Image";
 
 const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
   const { slug, service } = route.params;
 
   const [manga, setManga] = useState<Manga | null>(null);
   const [chapters, setChapters] = useState<Chapter[]>([]);
-
-  const [aspectRatio, setAspectRatio] = useState("2/3");
 
   useEffect(() => {
     const getManga = async () => {
@@ -53,22 +51,13 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
           <Feather name="external-link" size={18} color={colors.font} />
         </Button>
       </View>
-      <RNImage
+      <Image
         source={{
           uri: manga?.coverUrl,
           headers: service.headers,
         }}
-        style={{
-          ...styles.image,
-          aspectRatio: aspectRatio,
-        }}
-        contentFit="contain"
-        recyclingKey={manga?.id}
-        transition={300}
-        onLoad={(e) => {
-          const { width, height } = e.source;
-          setAspectRatio(`${width}/${height}`);
-        }}
+        transition={200}
+        style={{ borderRadius: 8 }}
       />
       <Text
         style={[

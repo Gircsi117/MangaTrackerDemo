@@ -16,7 +16,7 @@ class MangaBuddyService extends MangaPage {
   public static readonly id = "mangabuddy";
   public static readonly name = "MangaBuddy";
   protected static readonly origin = "https://mangabuddy.com";
-  public static readonly referer = "https://mangabuddy.com/";
+  protected static readonly referer = "https://mangabuddy.com/";
   public static readonly logoUrl =
     "https://mangabuddy.com/static/sites/mangabuddy/icons/android-chrome-192x192.png";
 

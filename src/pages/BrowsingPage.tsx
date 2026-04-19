@@ -12,6 +12,7 @@ import { Image as RNImage } from "expo-image";
 import PadlizsanFanSubService from "../services/padlizsanfansub.service";
 import MangaDexEnService from "../services/mangadex-en.service";
 import NHentaiService from "../services/nhentai.service";
+import Image from "../components/Image";
 
 const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
   const services: MangaPageConstructor[] = [
@@ -33,7 +34,7 @@ const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
             style={styles.mangaServiceItem}
             onPress={() => navigation.navigate("Search", { service })}
           >
-            <RNImage
+            <Image
               source={{
                 uri: service.logoUrl,
                 headers: service.headers,

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Container from "../components/Container";
 import { ChapterPageProps } from "../types/navigation.type";
 import { Chapter, ChapterPage as ChapterPageType } from "../types/manga.type";
-import { Text, View } from "react-native";
+import { Text, useWindowDimensions, View } from "react-native";
 import Button from "../components/Button";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MangaPage from "../modules/manga-page.module";
@@ -22,7 +22,9 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const [showControls, setShowControls] = useState(false);
 
   const insets = useSafeAreaInsets();
-  const flatListRef = useRef<FlashListRef<ChapterPageType>>(null);
+  const { height } = useWindowDimensions();
+
+  const flashListRef = useRef<FlashListRef<ChapterPageType>>(null);
 
   const getPages = useCallback(async () => {
     const page = pageRef.current!;
@@ -44,7 +46,7 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
+    flashListRef.current?.scrollToOffset({ offset: 0, animated: false });
     if (!pageRef.current) {
       pageRef.current = new service(slug);
     }
@@ -58,7 +60,8 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
     <Container noSroll>
       <FlashList
         data={pages}
-        ref={flatListRef}
+        ref={flashListRef}
+        drawDistance={height * 5}
         keyExtractor={(page) => page.id}
         renderItem={({ item: page, index }) => (
           <PageImage

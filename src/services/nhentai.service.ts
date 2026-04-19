@@ -133,8 +133,6 @@ class NHentaiService extends MangaPage {
 
       const data = res.data;
 
-      console.log(data.pages);
-
       const pages: ChapterPage[] = data.pages.map(
         (page: any, index: number) => {
           const pageData: ChapterPage = {

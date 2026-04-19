@@ -10,10 +10,10 @@ import {
   View,
 } from "react-native";
 import styles, { colors } from "../styles/styles";
-import { Image as RNImage } from "expo-image";
 import Button from "../components/Button";
 import useSearch from "../hooks/useSearch";
 import { Entypo } from "@expo/vector-icons";
+import Image from "../components/Image";
 
 const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
   const { service } = route.params;
@@ -43,12 +43,12 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
           { marginBottom: 8, backgroundColor: "transparent" },
         ]}
       >
-        <RNImage
+        <Image
           source={{
             uri: service.logoUrl,
             headers: service.headers,
           }}
-          style={{ width: 50, aspectRatio: 1 }}
+          style={{ width: 50, aspectRatio: 1, backgroundColor: undefined }}
         />
         <Text style={[styles.text, { fontSize: 16, fontWeight: "bold" }]}>
           {service.name}
@@ -95,18 +95,14 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
               })
             }
           >
-            <RNImage
+            <Image
               source={{
                 uri: manga.coverUrl,
                 headers: service.headers,
               }}
-              style={[
-                styles.image,
-                { width: "100%", aspectRatio: "2/3", borderRadius: 8 },
-              ]}
-              contentFit="cover"
+              style={[styles.image, { borderRadius: 8, aspectRatio: 2 / 3 }]}
               recyclingKey={String(manga.id)}
-              transition={300}
+              transition={200}
             />
             <Text
               style={[styles.text, { marginTop: 4, fontSize: 12 }]}
