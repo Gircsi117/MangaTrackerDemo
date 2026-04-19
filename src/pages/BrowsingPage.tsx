@@ -13,6 +13,7 @@ import PadlizsanFanSubService from "../services/padlizsanfansub.service";
 import MangaDexEnService from "../services/mangadex-en.service";
 import NHentaiService from "../services/nhentai.service";
 import Image from "../components/Image";
+import ManhwaManiaService from "../services/manhwamania.service";
 
 const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
   const services: MangaPageConstructor[] = [
@@ -23,6 +24,7 @@ const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
     ToonVerseService,
     PadlizsanFanSubService,
     NHentaiService,
+    ManhwaManiaService,
   ].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
