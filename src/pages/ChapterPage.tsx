@@ -2,13 +2,13 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Container from "../components/Container";
 import { ChapterPageProps } from "../types/navigation.type";
 import { Chapter, ChapterPage as ChapterPageType } from "../types/manga.type";
-import { Image as RNImage } from "expo-image";
-import { FlatList, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import Button from "../components/Button";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MangaPage from "../modules/manga-page.module";
 import styles from "../styles/styles";
-import { FlashList, FlashListRef } from "@shopify/flash-list";
+import { FlashList, FlashListRef, FlashListProps } from "@shopify/flash-list";
+import PageImage from "../components/PageImage";
 
 const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const { slug, chapterSlug, service } = route.params;
@@ -23,10 +23,6 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
 
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlashListRef<ChapterPageType>>(null);
-  const pageSizes = useRef<Record<string, { width: number; height: number }>>(
-    {},
-  );
-  const updateTimeout = useRef<number | null>(null);
 
   const getPages = useCallback(async () => {
     const page = pageRef.current!;
@@ -45,7 +41,6 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
     setNextChapter(null);
     setPrevChapter(null);
     setShowControls(false);
-    pageSizes.current = {};
   }, []);
 
   useEffect(() => {
@@ -57,6 +52,8 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
     getPages();
   }, [chapterSlug]);
 
+  const toggleControls = useCallback(() => setShowControls((old) => !old), []);
+
   return (
     <Container noSroll>
       <FlashList
@@ -64,38 +61,11 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
         ref={flatListRef}
         keyExtractor={(page) => page.id}
         renderItem={({ item: page, index }) => (
-          <RNImage
-            source={{
-              uri: page.imageUrl,
-              headers: {
-                Referer: service.referer,
-                "User-Agent": service.userAgent,
-              },
-            }}
-            style={{
-              width: "100%",
-              height: undefined,
-              aspectRatio: `${page.width}/${page.height}`,
-            }}
-            priority={index < 3 ? "high" : "normal"}
-            contentFit="contain"
-            recyclingKey={page.id}
-            onLoad={(e) => {
-              const { width, height } = e.source;
-              pageSizes.current[page.id] = { width, height };
-
-              if (updateTimeout.current) clearTimeout(updateTimeout.current);
-              updateTimeout.current = setTimeout(() => {
-                setPages((prev) =>
-                  prev.map((p) =>
-                    pageSizes.current[p.id]
-                      ? { ...p, ...pageSizes.current[p.id] }
-                      : p,
-                  ),
-                );
-              }, 100);
-            }}
-            onTouchEnd={() => setShowControls((old) => !old)}
+          <PageImage
+            page={page}
+            index={index}
+            service={service}
+            onTouchEnd={toggleControls}
           />
         )}
       />

@@ -44,13 +44,13 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
           onPress={() => navigation.navigate("Search", { service })}
           style={{ flex: 1 }}
         >
-          <Ionicons name="search" size={24} color={colors.font} />
+          <Ionicons name="search" size={18} color={colors.font} />
         </Button>
         <Button
           onPress={() => Linking.openURL(new service(slug).mangaUrl)}
           style={{ flex: 1 }}
         >
-          <Feather name="external-link" size={24} color={colors.font} />
+          <Feather name="external-link" size={18} color={colors.font} />
         </Button>
       </View>
       <RNImage
