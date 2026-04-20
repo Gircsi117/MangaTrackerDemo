@@ -55,7 +55,7 @@ class PadlizsanFanSubService extends MangaPage {
     const { get } = useCredentialsStore.getState();
     const credentials = get(this.id);
 
-    if (!credentials) return;
+    if (!credentials) throw new Error("Missing credentials!");
 
     const instance = axios.create({
       baseURL: PadlizsanFanSubService.origin + "/api",

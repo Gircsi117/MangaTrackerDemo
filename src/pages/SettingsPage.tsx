@@ -1,9 +1,8 @@
 import React from "react";
 import Container from "../components/Container";
-import { Text } from "react-native";
-import styles from "../styles/styles";
 import { SettingsPageProps } from "../types/navigation.type";
 import Button from "../components/Button";
+import DrizzleDB from "../db/db";
 
 const SettingsPage: React.FC<SettingsPageProps> = ({ navigation }) => {
   return (
@@ -11,6 +10,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ navigation }) => {
       <Button onPress={() => navigation.navigate("Credentials")}>
         Credentials
       </Button>
+
+      <Button onPress={() => navigation.navigate("Category")}>Category</Button>
+      <Button onPress={() => DrizzleDB.exportMainData()}>Export DB Data</Button>
     </Container>
   );
 };

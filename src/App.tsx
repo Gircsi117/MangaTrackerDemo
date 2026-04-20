@@ -13,11 +13,13 @@ import useCredentialsStore from "./stores/credentials.store";
 import CredentialsPage from "./pages/CredentialsPage";
 import Toast from "react-native-toast-message";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
-import { db } from "./db/db";
-import migrations from "../drizzle/migrations";
+import migrations from "../drizzle/migrations/migrations";
 import Container from "./components/Container";
 import { Text, View } from "react-native";
 import styles from "./styles/styles";
+import CategoryPage from "./pages/CategoryPage";
+import DrizzleDB from "./db/db";
+import Button from "./components/Button";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 useCredentialsStore.getState().load();
@@ -25,7 +27,7 @@ useCredentialsStore.getState().load();
 export default function App() {
   const DEFAULT_PAGE: keyof RootStackParamList = "Library";
 
-  const { success, error } = useMigrations(db, migrations);
+  const { success, error } = useMigrations(DrizzleDB.main, migrations);
 
   if (error)
     return (
@@ -34,6 +36,7 @@ export default function App() {
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <Text style={styles.text}>Migration error: {error.message}</Text>
+          <Button onPress={() => DrizzleDB.deleteMain()}>Delete DB</Button>
         </View>
       </Container>
     );
@@ -86,6 +89,10 @@ export default function App() {
 
           <Stack.Screen name="Credentials">
             {(props) => <CredentialsPage {...props} />}
+          </Stack.Screen>
+
+          <Stack.Screen name="Category">
+            {(props) => <CategoryPage {...props} />}
           </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
