@@ -64,9 +64,9 @@ class MangaDexHuService extends MangaPage {
         method: "GET",
         url: "/manga",
         params: {
-          title: params.query,
-          limit: params.limit ?? 20,
-          offset: params.offset ?? 0,
+          title: query,
+          limit: limit ?? 20,
+          offset: offset ?? 0,
           "includes[]": ["cover_art", "author"],
         },
       });
