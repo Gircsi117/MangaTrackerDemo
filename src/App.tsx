@@ -12,12 +12,42 @@ import SearchPage from "./pages/SearchPage";
 import useCredentialsStore from "./stores/credentials.store";
 import CredentialsPage from "./pages/CredentialsPage";
 import Toast from "react-native-toast-message";
+import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
+import { db } from "./db/db";
+import migrations from "../drizzle/migrations";
+import Container from "./components/Container";
+import { Text, View } from "react-native";
+import styles from "./styles/styles";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 useCredentialsStore.getState().load();
 
 export default function App() {
   const DEFAULT_PAGE: keyof RootStackParamList = "Library";
+
+  const { success, error } = useMigrations(db, migrations);
+
+  if (error)
+    return (
+      <Container>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={styles.text}>Migration error: {error.message}</Text>
+        </View>
+      </Container>
+    );
+
+  if (!success)
+    return (
+      <Container>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={styles.text}>Migrations...</Text>
+        </View>
+      </Container>
+    );
 
   return (
     <>
