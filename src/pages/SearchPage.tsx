@@ -1,29 +1,34 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Container from "../components/Container";
 import { SearchPageProps } from "../types/navigation.type";
 import {
+  ActivityIndicator,
   FlatList,
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import styles, { colors } from "../styles/styles";
-import Button from "../components/Button";
 import useSearch from "../hooks/useSearch";
-import { Entypo } from "@expo/vector-icons";
+
 import Image from "../components/Image";
 import { Manga } from "../types/manga.type";
+import SearchHeader from "../components/SearchHeader";
 
 const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
   const { service } = route.params;
   const {
     search,
-    query,
-    setQuery,
     page,
     totalPages,
+    isLoading,
     mangas,
     handleSearch,
     handlePageChange,
@@ -78,93 +83,59 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
     [navigation, service],
   );
 
-  const ListHeader = (
-    <View>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 12,
-          marginBottom: 16,
-          paddingBottom: 16,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.border,
-        }}
-      >
-        <Image
-          source={{ uri: service.logoUrl, headers: service.headers }}
-          style={{ width: 36, height: 36, borderRadius: 8, backgroundColor: undefined }}
-        />
-        <Text style={[styles.text, { fontSize: 18, fontWeight: "700" }]}>
-          {service.name}
-        </Text>
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          gap: 8,
-          marginBottom: 16,
-          alignItems: "center",
-        }}
-      >
-        <TextInput
-          value={query}
-          onChangeText={setQuery}
-          onSubmitEditing={handleSearch}
-          placeholder="Keresés..."
-          placeholderTextColor={colors.fontMuted}
-          returnKeyType="search"
-          style={styles.input}
-        />
-        {!!query && (
-          <Button onPress={clearSearch} style={{ width: 46, paddingHorizontal: 0 }}>
-            <Entypo name="cross" size={18} color={colors.font} />
-          </Button>
-        )}
-      </View>
-    </View>
+  const ListHeader = useMemo(
+    () => (
+      <SearchHeader
+        service={service}
+        onSearch={handleSearch}
+        onClear={clearSearch}
+      />
+    ),
+    [service, handleSearch, clearSearch],
   );
 
-  const ListFooter =
-    totalPages > 1 ? (
-      <View style={{ marginTop: 20, marginBottom: 8 }}>
-        <Text style={[styles.textMuted, { marginBottom: 10, fontSize: 13 }]}>
-          {page} / {totalPages} oldal
-        </Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 6 }}
-        >
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <TouchableOpacity
-              key={p}
-              onPress={() => handlePagePress(p)}
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 8,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: p === page ? colors.primary : colors.surface,
-                borderWidth: 1,
-                borderColor: p === page ? colors.primary : colors.border,
-              }}
-            >
-              <Text
-                style={[
-                  styles.text,
-                  { fontSize: 13, fontWeight: p === page ? "700" : "400" },
-                ]}
+  const ListFooter = useMemo(
+    () =>
+      totalPages > 1 ? (
+        <View style={{ marginTop: 20, marginBottom: 8 }}>
+          <Text style={[styles.textMuted, { marginBottom: 10, fontSize: 13 }]}>
+            {page} / {totalPages} oldal
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 6 }}
+          >
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <TouchableOpacity
+                key={p}
+                onPress={() => handlePagePress(p)}
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: 8,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: p === page ? colors.primary : colors.surface,
+                  borderWidth: 1,
+                  borderColor: p === page ? colors.primary : colors.border,
+                }}
               >
-                {p}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
-    ) : null;
+                <Text
+                  style={[
+                    styles.text,
+                    { fontSize: 13, fontWeight: p === page ? "700" : "400" },
+                  ]}
+                >
+                  {p}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      ) : null,
+    [totalPages, page, handlePagePress],
+  );
 
   return (
     <Container withNavbar noSroll>
@@ -179,6 +150,14 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
         renderItem={renderItem}
         ListHeaderComponent={ListHeader}
         ListFooterComponent={ListFooter}
+        ListEmptyComponent={
+          isLoading ? (
+            <ActivityIndicator
+              style={{ marginTop: 40 }}
+              color={colors.primary}
+            />
+          ) : null
+        }
       />
     </Container>
   );

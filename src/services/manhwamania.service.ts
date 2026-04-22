@@ -10,8 +10,6 @@ import {
 } from "../types/manga.type";
 import { ListParams, List } from "../types/list.types";
 import { v4 as uuidv4 } from "uuid";
-import parse from "node-html-parser";
-
 class ManhwaManiaService extends MangaPage {
   public static readonly id: string = "manhwamania";
   public static readonly name: string = "ManhwaMania";
@@ -48,27 +46,11 @@ class ManhwaManiaService extends MangaPage {
   private static async getSlugs() {
     try {
       const response = await axios.get("https://manhwamania.hu");
-      const root = parse(response.data);
-
-      // A script tagek közül kell kiszedni
-      const scripts = root.querySelectorAll("script");
-
-      let titleToRoute: Record<string, string> = {};
-
-      for (const script of scripts) {
-        const content = script.text;
-        if (content.includes("titleToRoute")) {
-          const match = content.match(
-            /const titleToRoute\s*=\s*(\{[\s\S]*?\});/,
-          );
-          if (match) {
-            titleToRoute = JSON.parse(match[1]);
-            break;
-          }
-        }
-      }
-
-      return titleToRoute;
+      const match = (response.data as string).match(
+        /const titleToRoute\s*=\s*(\{[\s\S]*?\});/,
+      );
+      if (match) return JSON.parse(match[1]) as Record<string, string>;
+      return {};
     } catch (error) {
       console.error(error);
       return {};

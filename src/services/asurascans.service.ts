@@ -39,7 +39,10 @@ class AsuraScansService extends MangaPage {
         params: { q: query, page: page },
       });
 
-      const root = parse(res.data);
+      const root = parse(res.data, {
+        comment: false,
+        blockTextElements: { script: true, noscript: true, style: true },
+      });
       const propsRaw = root
         .querySelector("astro-island[props*='initialSeries']")
         ?.getAttribute("props");
@@ -83,7 +86,10 @@ class AsuraScansService extends MangaPage {
       if (this.manga) return this.manga;
 
       const res = await AsuraScansService.axios.get(`/comics/${this.slug}`);
-      const root = parse(res.data);
+      const root = parse(res.data, {
+        comment: false,
+        blockTextElements: { script: true, noscript: true, style: true },
+      });
 
       const propsRaw = root
         .querySelector("astro-island[props*='title']")
@@ -115,7 +121,10 @@ class AsuraScansService extends MangaPage {
       if (this.chapters.length) return this.chapters;
 
       const res = await AsuraScansService.axios.get(`/comics/${this.slug}`);
-      const root = parse(res.data);
+      const root = parse(res.data, {
+        comment: false,
+        blockTextElements: { script: true, noscript: true, style: true },
+      });
 
       const propsRaw = root
         .querySelector("astro-island[props*='chapters']")
@@ -150,7 +159,10 @@ class AsuraScansService extends MangaPage {
       const res = await AsuraScansService.axios.get(
         `/comics/${this.slug}/chapter/${chapterSlug}`,
       );
-      const root = parse(res.data);
+      const root = parse(res.data, {
+        comment: false,
+        blockTextElements: { script: true, noscript: true, style: true },
+      });
 
       const propsRaw = root
         .querySelector("astro-island[props*='pages']")

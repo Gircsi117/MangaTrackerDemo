@@ -47,7 +47,10 @@ class MangaBuddyService extends MangaPage {
         },
       });
 
-      const root = parse(res.data);
+      const root = parse(res.data, {
+        comment: false,
+        blockTextElements: { script: true, noscript: true, style: true },
+      });
       const items = root.querySelectorAll(".book-detailed-item");
 
       const paginationCount =
@@ -102,7 +105,10 @@ class MangaBuddyService extends MangaPage {
         method: "GET",
         url: `/${this.slug}`,
       });
-      const root = parse(res.data);
+      const root = parse(res.data, {
+        comment: false,
+        blockTextElements: { script: true, noscript: true, style: true },
+      });
 
       const bookInfo = root.querySelector(".book-info");
       const title = bookInfo?.querySelector("h1")?.text.trim() || "Unknown";
@@ -135,7 +141,10 @@ class MangaBuddyService extends MangaPage {
         method: "GET",
         url: `/${this.slug}`,
       });
-      const root = parse(res.data);
+      const root = parse(res.data, {
+        comment: false,
+        blockTextElements: { script: true, noscript: true, style: true },
+      });
 
       const chapterList = root
         .querySelectorAll("#chapter-list li")

@@ -1,19 +1,18 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import { MangaPageConstructor } from "../types/manga.type";
 import { Manga } from "../types/manga.type";
 
 type UseSearchResult = {
-  query: string;
-  setQuery: (q: string) => void;
   page: number;
   totalPages: number;
+  isLoading: boolean;
   mangas: Manga[];
   search: (
     currentPage?: number,
     currentLimit?: number,
     currentQuery?: string,
   ) => Promise<void>;
-  handleSearch: () => void;
+  handleSearch: (searchQuery: string) => void;
   handlePageChange: (newPage: number) => void;
   clearSearch: () => void;
 };
@@ -21,66 +20,78 @@ type UseSearchResult = {
 const DEFAULT_LIMIT = 20;
 
 const useSearch = (service: MangaPageConstructor): UseSearchResult => {
-  const [query, setQuery] = useState("");
   const [limit, setLimit] = useState(DEFAULT_LIMIT);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [mangas, setMangas] = useState<Manga[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const queryRef = useRef(query);
-  const pageRef = useRef(page);
-  const limitRef = useRef(limit);
+  const requestIdRef = useRef(0);
+  const currentQueryRef = useRef("");
 
-  useEffect(() => { queryRef.current = query; }, [query]);
-  useEffect(() => { pageRef.current = page; }, [page]);
-  useEffect(() => { limitRef.current = limit; }, [limit]);
-
-  const totalPages = Math.ceil(totalCount / limitRef.current);
+  const totalPages = Math.ceil(totalCount / limit);
 
   const search = useCallback(async (
-    currentPage: number = pageRef.current,
-    currentLimit: number = limitRef.current,
-    currentQuery: string = queryRef.current,
+    currentPage: number = 1,
+    currentLimit: number = DEFAULT_LIMIT,
+    currentQuery: string = "",
   ) => {
-    const { items, totalCount } = await service.search({
-      query: currentQuery.trim(),
-      limit: currentLimit,
-      offset: (currentPage - 1) * currentLimit,
-    });
+    const requestId = ++requestIdRef.current;
+    setMangas([]);
+    setIsLoading(true);
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    if (requestId !== requestIdRef.current) return;
+    try {
+      const { items, totalCount } = await service.search({
+        query: currentQuery.trim(),
+        limit: currentLimit,
+        offset: (currentPage - 1) * currentLimit,
+      });
 
-    if (currentPage === 1 && items.length !== currentLimit) {
-      setLimit(items.length);
+      if (requestId !== requestIdRef.current) return;
+
+      if (currentPage === 1 && items.length !== currentLimit) {
+        setLimit(items.length);
+      }
+
+      setMangas(items);
+      setTotalCount(totalCount);
+    } catch {
+      if (requestId !== requestIdRef.current) return;
+      setMangas([]);
+      setTotalCount(0);
+    } finally {
+      if (requestId === requestIdRef.current) {
+        setIsLoading(false);
+      }
     }
+  }, [service]);
 
-    setMangas(items);
-    setTotalCount(totalCount);
-  }, []);
-
-  const handleSearch = useCallback(() => {
+  const handleSearch = useCallback((searchQuery: string) => {
+    currentQueryRef.current = searchQuery;
     setPage(1);
     setLimit(DEFAULT_LIMIT);
-    search(1, DEFAULT_LIMIT);
-  }, []);
+    search(1, DEFAULT_LIMIT, searchQuery);
+  }, [search]);
 
   const handlePageChange = useCallback((newPage: number) => {
     setPage(newPage);
-    search(newPage);
-  }, []);
+    search(newPage, limit, currentQueryRef.current);
+  }, [limit, search]);
 
   const clearSearch = useCallback(() => {
-    setQuery("");
+    currentQueryRef.current = "";
     setPage(1);
     setLimit(DEFAULT_LIMIT);
     setTotalCount(0);
     setMangas([]);
     search(1, DEFAULT_LIMIT, "");
-  }, []);
+  }, [search]);
 
   return {
-    query,
-    setQuery,
     page,
     totalPages,
+    isLoading,
     mangas,
     search,
     handleSearch,

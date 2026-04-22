@@ -11,7 +11,6 @@ import {
 } from "../types/manga.type";
 import useCredentialsStore from "../stores/credentials.store";
 import { v4 as uuidv4 } from "uuid";
-import { Image as RNImage } from "react-native";
 
 class PadlizsanFanSubService extends MangaPage {
   public static readonly id = "padlizsanfansub";
@@ -85,11 +84,7 @@ class PadlizsanFanSubService extends MangaPage {
       const res = await this.axios({
         method: "GET",
         url: `/manga`,
-        params: {
-          search: query,
-          limit: limit,
-          offset: offset,
-        },
+        params: { search: query },
       });
 
       const list: any[] = res.data;
