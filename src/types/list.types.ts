@@ -8,4 +8,5 @@ export type ListParams = {
   offset?: number;
   order?: "asc" | "desc";
   query?: string;
+  signal?: AbortSignal;
 };

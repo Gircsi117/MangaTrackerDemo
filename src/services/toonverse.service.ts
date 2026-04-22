@@ -44,6 +44,7 @@ class ToonVerseService extends MangaPage {
           includePromotions: true,
           semantic: true,
         },
+        signal: params.signal,
       });
 
       const { items, total } = res.data.data;

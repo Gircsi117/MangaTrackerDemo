@@ -37,6 +37,7 @@ class AsuraScansService extends MangaPage {
         method: "GET",
         url: `/browse`,
         params: { q: query, page: page },
+        signal: params.signal,
       });
 
       const root = parse(res.data, {

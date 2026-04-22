@@ -42,6 +42,7 @@ class NHentaiService extends MangaPage {
           page: page,
           sort: "date",
         },
+        signal: params.signal,
       });
 
       const { result = [], total = 0, num_pages = 0, per_page = 0 } = res.data;

@@ -69,6 +69,7 @@ class MangaDexHuService extends MangaPage {
           offset: offset ?? 0,
           "includes[]": ["cover_art", "author"],
         },
+        signal: params.signal,
       });
 
       const mangas = result.data.data.map((item: any) => {

@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { MangaPageConstructor } from "../types/manga.type";
 import { Manga } from "../types/manga.type";
 
@@ -28,14 +28,23 @@ const useSearch = (service: MangaPageConstructor): UseSearchResult => {
 
   const requestIdRef = useRef(0);
   const currentQueryRef = useRef("");
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const totalPages = Math.ceil(totalCount / limit);
+
+  useEffect(() => {
+    return () => { abortControllerRef.current?.abort(); };
+  }, []);
 
   const search = useCallback(async (
     currentPage: number = 1,
     currentLimit: number = DEFAULT_LIMIT,
     currentQuery: string = "",
   ) => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
+    const { signal } = abortControllerRef.current;
+
     const requestId = ++requestIdRef.current;
     setMangas([]);
     setIsLoading(true);
@@ -46,6 +55,7 @@ const useSearch = (service: MangaPageConstructor): UseSearchResult => {
         query: currentQuery.trim(),
         limit: currentLimit,
         offset: (currentPage - 1) * currentLimit,
+        signal,
       });
 
       if (requestId !== requestIdRef.current) return;
@@ -56,7 +66,8 @@ const useSearch = (service: MangaPageConstructor): UseSearchResult => {
 
       setMangas(items);
       setTotalCount(totalCount);
-    } catch {
+    } catch (error: any) {
+      if (error?.name === "AbortError" || error?.code === "ERR_CANCELED") return;
       if (requestId !== requestIdRef.current) return;
       setMangas([]);
       setTotalCount(0);

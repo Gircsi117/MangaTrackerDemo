@@ -45,6 +45,7 @@ class MangaBuddyService extends MangaPage {
           limit: limit,
           offset: offset,
         },
+        signal: params.signal,
       });
 
       const root = parse(res.data, {

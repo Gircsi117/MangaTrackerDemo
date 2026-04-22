@@ -43,9 +43,9 @@ class ManhwaManiaService extends MangaPage {
       .replace(/^-|-$/g, "");
   }
 
-  private static async getSlugs() {
+  private static async getSlugs(signal?: AbortSignal) {
     try {
-      const response = await axios.get("https://manhwamania.hu");
+      const response = await axios.get("https://manhwamania.hu", { signal });
       const match = (response.data as string).match(
         /const titleToRoute\s*=\s*(\{[\s\S]*?\});/,
       );
@@ -61,11 +61,12 @@ class ManhwaManiaService extends MangaPage {
     try {
       const { query = "" } = params;
 
-      const slugs = await this.getSlugs();
+      const slugs = await this.getSlugs(params.signal);
 
       const res = await this.axios({
         method: "GET",
         url: "/get_all_series.php",
+        signal: params.signal,
       });
 
       const { series } = res.data;

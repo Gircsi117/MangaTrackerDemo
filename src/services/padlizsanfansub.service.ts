@@ -85,6 +85,7 @@ class PadlizsanFanSubService extends MangaPage {
         method: "GET",
         url: `/manga`,
         params: { search: query },
+        signal: params.signal,
       });
 
       const list: any[] = res.data;
