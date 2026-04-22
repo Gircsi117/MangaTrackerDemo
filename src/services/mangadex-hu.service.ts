@@ -186,9 +186,9 @@ class MangaDexHuService extends MangaPage {
     chapterSlug: ChapterSlug,
   ): Promise<ChapterContent> {
     try {
-      const [serverResult] = await Promise.all([
-        MangaDexHuService.axios.get(`/at-home/server/${chapterSlug}`),
-      ]);
+      const serverResult = await MangaDexHuService.axios.get(
+        `/at-home/server/${chapterSlug}`,
+      );
 
       const data = serverResult.data;
       const { baseUrl, chapter } = data;

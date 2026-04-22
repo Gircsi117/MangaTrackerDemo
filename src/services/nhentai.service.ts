@@ -83,7 +83,6 @@ class NHentaiService extends MangaPage {
       });
 
       const data = res.data;
-      console.log(data);
 
       this.manga = {
         id: uuidv4(),

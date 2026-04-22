@@ -188,7 +188,7 @@ class AsuraScansService extends MangaPage {
         pages: pages,
         currentChapter: curr,
         nextChapter: next,
-        prevChapter: next,
+        prevChapter: prev,
       };
     } catch (error) {
       console.error(error);
