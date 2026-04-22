@@ -140,6 +140,17 @@ const button = StyleSheet.create({
     fontWeight: "600",
     textAlign: "center",
   },
+  navButton: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: 6,
+    backgroundColor: "#ffffff18",
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ffffff22",
+  },
 });
 
 //*------------------------------------------------------------------------------------------------------------------

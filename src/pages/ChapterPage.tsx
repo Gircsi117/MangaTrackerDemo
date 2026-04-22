@@ -15,6 +15,7 @@ import { ImageLoadEventData } from "expo-image";
 import PageImage from "../components/PageImage";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../components/Button";
+import styles from "../styles/styles";
 
 const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const { slug, chapterSlug, service } = route.params;
@@ -92,18 +93,6 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
     [pages, toggleControls, handleLoad],
   );
 
-  const navButtonStyle = {
-    flexDirection: "row" as const,
-    alignItems: "center" as const,
-    gap: 6,
-    backgroundColor: "#ffffff18",
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#ffffff22",
-  };
-
   return (
     <Container noSroll>
       <FlatList
@@ -135,7 +124,7 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
             }}
           >
             <Button
-              style={navButtonStyle}
+              style={styles.navButton}
               onPress={() => navigation.navigate("Manga", { slug, service })}
             >
               <Ionicons name="arrow-back" size={20} color="#fff" />
@@ -178,7 +167,7 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
             >
               {prevChapter ? (
                 <Button
-                  style={navButtonStyle}
+                  style={styles.navButton}
                   onPress={() => {
                     clear();
                     navigation.navigate("Chapter", {
@@ -201,7 +190,7 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
 
               {nextChapter ? (
                 <Button
-                  style={navButtonStyle}
+                  style={styles.navButton}
                   onPress={() => {
                     clear();
                     navigation.navigate("Chapter", {
