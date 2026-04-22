@@ -2,20 +2,27 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Container from "../components/Container";
 import { ChapterPageProps } from "../types/navigation.type";
 import { Chapter, ChapterPage as ChapterPageType } from "../types/manga.type";
-import {
-  FlatList,
-  ImageSize,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, ImageSize, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MangaPage from "../modules/manga-page.module";
-import { ImageLoadEventData } from "expo-image";
 import PageImage from "../components/PageImage";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../components/Button";
 import styles from "../styles/styles";
+
+type ChapterState = {
+  pages: ChapterPageType[];
+  currentChapter: Chapter | null;
+  nextChapter: Chapter | null;
+  prevChapter: Chapter | null;
+};
+
+const EMPTY_STATE: ChapterState = {
+  pages: [],
+  currentChapter: null,
+  nextChapter: null,
+  prevChapter: null,
+};
 
 const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const { slug, chapterSlug, service } = route.params;
@@ -26,29 +33,27 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
 
-  const [pages, setPages] = useState<ChapterPageType[]>([]);
-  const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
-  const [nextChapter, setNextChapter] = useState<Chapter | null>(null);
-  const [prevChapter, setPrevChapter] = useState<Chapter | null>(null);
+  const [state, setState] = useState<ChapterState>(EMPTY_STATE);
   const [showControls, setShowControls] = useState(false);
 
-  const getPages = useCallback(async () => {
-    const page = pageRef.current!;
-    const { pages, currentChapter, nextChapter, prevChapter } =
-      await page.getChapterContent(chapterSlug);
+  const { pages, currentChapter, nextChapter, prevChapter } = state;
 
-    setPages(pages);
-    setCurrentChapter(currentChapter ?? null);
-    setNextChapter(nextChapter ?? null);
-    setPrevChapter(prevChapter ?? null);
+  const getPages = useCallback(async () => {
+    const { pages, currentChapter, nextChapter, prevChapter } =
+      await pageRef.current!.getChapterContent(chapterSlug);
+
+    setState({
+      pages,
+      currentChapter: currentChapter ?? null,
+      nextChapter: nextChapter ?? null,
+      prevChapter: prevChapter ?? null,
+    });
   }, [chapterSlug]);
 
   const clear = useCallback(() => {
-    setPages([]);
-    setCurrentChapter(null);
-    setNextChapter(null);
-    setPrevChapter(null);
+    setState(EMPTY_STATE);
     setShowControls(false);
+    pageSizes.current = {};
   }, []);
 
   useEffect(() => {
@@ -56,26 +61,24 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
     if (!pageRef.current) {
       pageRef.current = new service(slug);
     }
-
     getPages();
   }, [chapterSlug]);
 
   const toggleControls = useCallback(() => setShowControls((old) => !old), []);
 
-  const handleLoad = useCallback(
-    (page: ChapterPageType) => (e: ImageLoadEventData) => {
-      const { width, height } = e.source;
-
-      pageSizes.current[page.id] = { width, height };
+  const onSizeLoad = useCallback(
+    (id: string, width: number, height: number) => {
+      pageSizes.current[id] = { width, height };
 
       if (updateTimeout.current) clearTimeout(updateTimeout.current);
       updateTimeout.current = setTimeout(() => {
-        setPages((prev) =>
-          prev.map((p) =>
+        setState((prev) => ({
+          ...prev,
+          pages: prev.pages.map((p) =>
             pageSizes.current[p.id] ? { ...p, ...pageSizes.current[p.id] } : p,
           ),
-        );
-      }, 100);
+        }));
+      }, 200);
     },
     [],
   );
@@ -87,10 +90,10 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
         index={index}
         service={service}
         onTouchEnd={toggleControls}
-        onLoad={handleLoad(page)}
+        onSizeLoad={onSizeLoad}
       />
     ),
-    [pages, toggleControls, handleLoad],
+    [toggleControls, service, onSizeLoad],
   );
 
   return (
@@ -100,8 +103,9 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
         data={pages}
         keyExtractor={(page) => page.id}
         initialNumToRender={5}
-        windowSize={5}
+        windowSize={7}
         maxToRenderPerBatch={5}
+        maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
         renderItem={renderItem}
       />
 
@@ -144,7 +148,6 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
               {currentChapter?.title}
             </Text>
 
-            {/* Spacer to keep title centered */}
             <View style={{ width: 38 }} />
           </View>
 
@@ -178,9 +181,7 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
                   }}
                 >
                   <Ionicons name="chevron-back" size={16} color="#fff" />
-                  <Text
-                    style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}
-                  >
+                  <Text style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}>
                     Előző
                   </Text>
                 </Button>
@@ -200,9 +201,7 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
                     });
                   }}
                 >
-                  <Text
-                    style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}
-                  >
+                  <Text style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}>
                     Következő
                   </Text>
                   <Ionicons name="chevron-forward" size={16} color="#fff" />

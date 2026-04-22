@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import Container from "../components/Container";
 import { SearchPageProps } from "../types/navigation.type";
 import {
@@ -14,6 +14,7 @@ import Button from "../components/Button";
 import useSearch from "../hooks/useSearch";
 import { Entypo } from "@expo/vector-icons";
 import Image from "../components/Image";
+import { Manga } from "../types/manga.type";
 
 const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
   const { service } = route.params;
@@ -29,14 +30,56 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
     clearSearch,
   } = useSearch(service);
 
-  const scrollRef = useRef<ScrollView>(null);
+  const listRef = useRef<FlatList>(null);
 
   useEffect(() => {
     search();
   }, []);
 
-  return (
-    <Container withNavbar scrollRef={scrollRef}>
+  const handlePagePress = useCallback(
+    (p: number) => {
+      listRef.current?.scrollToOffset({ offset: 0, animated: true });
+      handlePageChange(p);
+    },
+    [handlePageChange],
+  );
+
+  const renderItem = useCallback(
+    ({ item: manga }: { item: Manga }) => (
+      <TouchableOpacity
+        style={{ flex: 1 }}
+        onPress={() =>
+          navigation.navigate("Manga", { slug: manga.slug, service })
+        }
+      >
+        <View
+          style={{
+            borderRadius: 10,
+            overflow: "hidden",
+            borderWidth: 1,
+            borderColor: colors.border,
+          }}
+        >
+          <Image
+            source={{ uri: manga.coverUrl, headers: service.headers }}
+            style={[styles.image, { aspectRatio: 2 / 3 }]}
+            recyclingKey={String(manga.id)}
+            transition={200}
+          />
+        </View>
+        <Text
+          style={[styles.text, { marginTop: 6, fontSize: 12 }]}
+          numberOfLines={2}
+        >
+          {manga.title}
+        </Text>
+      </TouchableOpacity>
+    ),
+    [navigation, service],
+  );
+
+  const ListHeader = (
+    <View>
       <View
         style={{
           flexDirection: "row",
@@ -49,10 +92,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
         }}
       >
         <Image
-          source={{
-            uri: service.logoUrl,
-            headers: service.headers,
-          }}
+          source={{ uri: service.logoUrl, headers: service.headers }}
           style={{ width: 36, height: 36, borderRadius: 8, backgroundColor: undefined }}
         />
         <Text style={[styles.text, { fontSize: 18, fontWeight: "700" }]}>
@@ -83,88 +123,63 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
           </Button>
         )}
       </View>
+    </View>
+  );
 
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-        {mangas.map((manga) => (
-          <TouchableOpacity
-            key={String(manga.id)}
-            style={{ width: "48%" }}
-            onPress={() =>
-              navigation.navigate("Manga", {
-                slug: manga.slug,
-                service,
-              })
-            }
-          >
-            <View
+  const ListFooter =
+    totalPages > 1 ? (
+      <View style={{ marginTop: 20, marginBottom: 8 }}>
+        <Text style={[styles.textMuted, { marginBottom: 10, fontSize: 13 }]}>
+          {page} / {totalPages} oldal
+        </Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 6 }}
+        >
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <TouchableOpacity
+              key={p}
+              onPress={() => handlePagePress(p)}
               style={{
-                borderRadius: 10,
-                overflow: "hidden",
+                width: 38,
+                height: 38,
+                borderRadius: 8,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: p === page ? colors.primary : colors.surface,
                 borderWidth: 1,
-                borderColor: colors.border,
+                borderColor: p === page ? colors.primary : colors.border,
               }}
             >
-              <Image
-                source={{
-                  uri: manga.coverUrl,
-                  headers: service.headers,
-                }}
-                style={[styles.image, { aspectRatio: 2 / 3 }]}
-                recyclingKey={String(manga.id)}
-                transition={200}
-              />
-            </View>
-            <Text
-              style={[styles.text, { marginTop: 6, fontSize: 12 }]}
-              numberOfLines={2}
-            >
-              {manga.title}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {totalPages > 1 && (
-        <View style={{ marginTop: 20, marginBottom: 8 }}>
-          <Text style={[styles.textMuted, { marginBottom: 10, fontSize: 13 }]}>
-            {page} / {totalPages} oldal
-          </Text>
-          <FlatList
-            horizontal
-            data={Array.from({ length: totalPages }, (_, i) => i + 1)}
-            keyExtractor={(p) => String(p)}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 6 }}
-            renderItem={({ item: p }) => (
-              <TouchableOpacity
-                onPress={() => {
-                  scrollRef.current?.scrollTo({ y: 0, animated: true });
-                  handlePageChange(p);
-                }}
-                style={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: 8,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: p === page ? colors.primary : colors.surface,
-                  borderWidth: 1,
-                  borderColor: p === page ? colors.primary : colors.border,
-                }}
+              <Text
+                style={[
+                  styles.text,
+                  { fontSize: 13, fontWeight: p === page ? "700" : "400" },
+                ]}
               >
-                <Text
-                  style={[
-                    styles.text,
-                    { fontSize: 13, fontWeight: p === page ? "700" : "400" },
-                  ]}
-                >
-                  {p}
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
-      )}
+                {p}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+    ) : null;
+
+  return (
+    <Container withNavbar noSroll>
+      <FlatList
+        ref={listRef}
+        data={mangas}
+        keyExtractor={(manga) => String(manga.id)}
+        numColumns={2}
+        columnWrapperStyle={{ gap: 10 }}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        contentContainerStyle={{ padding: 12 }}
+        renderItem={renderItem}
+        ListHeaderComponent={ListHeader}
+        ListFooterComponent={ListFooter}
+      />
     </Container>
   );
 };
