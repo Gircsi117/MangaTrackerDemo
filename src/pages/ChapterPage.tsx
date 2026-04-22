@@ -2,20 +2,26 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Container from "../components/Container";
 import { ChapterPageProps } from "../types/navigation.type";
 import { Chapter, ChapterPage as ChapterPageType } from "../types/manga.type";
-import { FlatList, ImageSize, Text, View } from "react-native";
-import Button from "../components/Button";
+import {
+  FlatList,
+  ImageSize,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MangaPage from "../modules/manga-page.module";
-import styles from "../styles/styles";
 import { ImageLoadEventData } from "expo-image";
 import PageImage from "../components/PageImage";
+import { Ionicons } from "@expo/vector-icons";
+import Button from "../components/Button";
 
 const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const { slug, chapterSlug, service } = route.params;
 
   const pageRef = useRef<MangaPage | null>(null);
   const pageSizes = useRef<Record<string, ImageSize>>({});
-  const updateTimeout = useRef<number | null>(null);
+  const updateTimeout = useRef<NodeJS.Timeout | null>(null);
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
 
@@ -86,6 +92,18 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
     [pages, toggleControls, handleLoad],
   );
 
+  const navButtonStyle = {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: 6,
+    backgroundColor: "#ffffff18",
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ffffff22",
+  };
+
   return (
     <Container noSroll>
       <FlatList
@@ -98,66 +116,114 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
         renderItem={renderItem}
       />
 
-      <View
-        style={{
-          display: showControls ? "flex" : "none",
-          position: "absolute",
-          top: insets.top,
-          left: 0,
-          padding: 8,
-          backgroundColor: "#0000008a",
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Button onPress={() => navigation.navigate("Manga", { slug, service })}>
-          Back
-        </Button>
-        <Text style={[styles.text, { flex: 1, textAlign: "center" }]}>
-          {currentChapter?.title}
-        </Text>
-      </View>
-      {prevChapter && (
-        <Button
-          style={{
-            display: showControls ? "flex" : "none",
-            position: "absolute",
-            bottom: insets.bottom + 8,
-            left: 8,
-          }}
-          onPress={() => {
-            clear();
-            navigation.navigate("Chapter", {
-              slug,
-              service,
-              chapterSlug: prevChapter.slug,
-            });
-          }}
-        >
-          Prev
-        </Button>
-      )}
-      {nextChapter && (
-        <Button
-          style={{
-            display: showControls ? "flex" : "none",
-            position: "absolute",
-            bottom: insets.bottom + 8,
-            right: 8,
-          }}
-          onPress={() => {
-            clear();
-            navigation.navigate("Chapter", {
-              slug,
-              service,
-              chapterSlug: nextChapter.slug,
-            });
-          }}
-        >
-          Next
-        </Button>
+      {showControls && (
+        <>
+          {/* Top bar */}
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              paddingTop: insets.top + 8,
+              paddingBottom: 12,
+              paddingHorizontal: 12,
+              backgroundColor: "#000000c0",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <Button
+              style={navButtonStyle}
+              onPress={() => navigation.navigate("Manga", { slug, service })}
+            >
+              <Ionicons name="arrow-back" size={20} color="#fff" />
+            </Button>
+
+            <Text
+              style={{
+                flex: 1,
+                color: "#fff",
+                fontSize: 14,
+                fontWeight: "600",
+                textAlign: "center",
+              }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {currentChapter?.title}
+            </Text>
+
+            {/* Spacer to keep title centered */}
+            <View style={{ width: 38 }} />
+          </View>
+
+          {/* Bottom bar */}
+          {(prevChapter || nextChapter) && (
+            <View
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                paddingBottom: insets.bottom + 10,
+                paddingTop: 12,
+                paddingHorizontal: 16,
+                backgroundColor: "#000000c0",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              {prevChapter ? (
+                <Button
+                  style={navButtonStyle}
+                  onPress={() => {
+                    clear();
+                    navigation.navigate("Chapter", {
+                      slug,
+                      service,
+                      chapterSlug: prevChapter.slug,
+                    });
+                  }}
+                >
+                  <Ionicons name="chevron-back" size={16} color="#fff" />
+                  <Text
+                    style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}
+                  >
+                    Előző
+                  </Text>
+                </Button>
+              ) : (
+                <View />
+              )}
+
+              {nextChapter ? (
+                <Button
+                  style={navButtonStyle}
+                  onPress={() => {
+                    clear();
+                    navigation.navigate("Chapter", {
+                      slug,
+                      service,
+                      chapterSlug: nextChapter.slug,
+                    });
+                  }}
+                >
+                  <Text
+                    style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}
+                  >
+                    Következő
+                  </Text>
+                  <Ionicons name="chevron-forward" size={16} color="#fff" />
+                </Button>
+              ) : (
+                <View />
+              )}
+            </View>
+          )}
+        </>
       )}
     </Container>
   );

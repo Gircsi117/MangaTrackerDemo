@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import useCredentialsStore from "../stores/credentials.store";
 import Button from "./Button";
-import styles from "../styles/styles";
+import styles, { colors } from "../styles/styles";
 import Toast from "react-native-toast-message";
 
 type Props = {
@@ -28,8 +28,8 @@ const CredentialSetter: React.FC<Props> = ({ id, name }) => {
     await set(id, { email, password });
     Toast.show({
       type: "success",
-      text1: "Save successful",
-      text2: "Successfully saved credentials!",
+      text1: "Sikeres mentés",
+      text2: "Az adatok sikeresen el lettek mentve!",
     });
   };
 
@@ -40,20 +40,19 @@ const CredentialSetter: React.FC<Props> = ({ id, name }) => {
 
     Toast.show({
       type: "success",
-      text1: "Delete successful",
-      text2: "Successfully deleted credentials!",
+      text1: "Sikeres törlés",
+      text2: "Az adatok sikeresen törölve lettek!",
     });
   };
 
   return (
-    <View style={{ gap: 8 }}>
-      <Text style={styles.text}>{name}</Text>
-
+    <View style={[styles.card, { padding: 16, gap: 12 }]}>
+      <Text style={[styles.text, { fontSize: 15, fontWeight: "600" }]}>{name}</Text>
       <TextInput
         value={email}
         onChangeText={setEmail}
         placeholder="Email"
-        placeholderTextColor="#aaa"
+        placeholderTextColor={colors.fontMuted}
         keyboardType="email-address"
         autoCapitalize="none"
         style={styles.input}
@@ -62,17 +61,17 @@ const CredentialSetter: React.FC<Props> = ({ id, name }) => {
         value={password}
         onChangeText={setPassword}
         placeholder="Jelszó"
-        placeholderTextColor="#aaa"
+        placeholderTextColor={colors.fontMuted}
         secureTextEntry
         style={styles.input}
       />
       <View style={{ flexDirection: "row", gap: 8 }}>
-        <Button onPress={handleSave} style={{ marginTop: 0 }}>
+        <Button onPress={handleSave} style={{ flex: 1 }}>
           Mentés
         </Button>
         <Button
           onPress={handleDelete}
-          style={{ marginTop: 0, backgroundColor: "#e24a4a" }}
+          style={{ flex: 0.5, backgroundColor: colors.danger }}
         >
           Törlés
         </Button>

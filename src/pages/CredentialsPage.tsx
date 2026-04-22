@@ -9,7 +9,12 @@ import PadlizsanFanSubService from "../services/padlizsanfansub.service";
 const CredentialsPage: React.FC<CredentialsPageProps> = () => {
   return (
     <Container withNavbar>
-      <Text style={styles.text}>Credentials</Text>
+      <Text style={[styles.text, { fontSize: 24, fontWeight: "700", marginBottom: 4 }]}>
+        Bejelentkezési adatok
+      </Text>
+      <Text style={[styles.textMuted, { marginBottom: 20 }]}>
+        Felhasználónév és jelszó kezelése
+      </Text>
 
       <CredentialSetter
         id={PadlizsanFanSubService.id}

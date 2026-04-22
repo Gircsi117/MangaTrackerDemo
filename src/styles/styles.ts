@@ -1,8 +1,15 @@
 import { StyleSheet } from "react-native";
 
 export const colors = {
-  font: "#fff",
+  font: "#ffffff",
+  fontMuted: "#888888",
   primary: "#aa0093",
+  background: "#111111",
+  surface: "#1c1c1c",
+  surfaceElevated: "#262626",
+  border: "#2c2c2c",
+  imagePlaceholder: "#2a2a2a",
+  danger: "#e24a4a",
 } as const;
 
 //*------------------------------------------------------------------------------------------------------------------
@@ -11,28 +18,61 @@ export const colors = {
 const base = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1f1f1f",
+    backgroundColor: colors.background,
   },
   scroll: {
-    padding: 8,
+    padding: 12,
   },
   text: {
     color: colors.font,
   },
+  textMuted: {
+    color: colors.fontMuted,
+  },
   image: {
-    backgroundColor: "#585858",
+    backgroundColor: colors.imagePlaceholder,
     width: "100%",
     height: undefined,
   },
-  mangaServiceItem: {
-    display: "flex",
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    overflow: "hidden",
+  },
+  row: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
-    padding: 8,
-    paddingVertical: 8,
-    backgroundColor: "#585858",
-    borderRadius: 8,
+    gap: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    backgroundColor: colors.surface,
+  },
+  sectionHeader: {
+    color: colors.fontMuted,
+    fontSize: 11,
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 6,
+    marginTop: 20,
+    paddingHorizontal: 4,
+  },
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.border,
+    marginLeft: 14,
+  },
+  mangaServiceItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    padding: 14,
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
 });
 
@@ -42,29 +82,31 @@ const base = StyleSheet.create({
 const nav = StyleSheet.create({
   navbar: {
     width: "100%",
-    backgroundColor: "#181818",
-    borderTopWidth: 1,
-    borderTopColor: "#585858",
+    backgroundColor: "#0d0d0d",
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
   },
   navbarInner: {
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingVertical: 8,
-    gap: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    gap: 4,
   },
   navbarItem: {
-    width: 60,
-    aspectRatio: "1/1",
-    borderRadius: 8,
-    display: "flex",
+    flex: 1,
+    paddingVertical: 7,
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
+    gap: 3,
   },
-  navbarItemText:{
+  navbarItemText: {
     color: colors.font,
-    fontSize: 12,
+    fontSize: 11,
     textAlign: "center",
-  }
+    fontWeight: "500",
+  },
 });
 
 //*------------------------------------------------------------------------------------------------------------------
@@ -74,15 +116,28 @@ const button = StyleSheet.create({
   button: {
     alignSelf: "flex-start",
     justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
     backgroundColor: colors.primary,
-    borderRadius: 8,
-    height: 45,
+    borderRadius: 10,
+    height: 46,
+  },
+  buttonGhost: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "flex-start",
   },
   buttonText: {
     color: colors.font,
-    fontSize: 12,
+    fontSize: 13,
+    fontWeight: "600",
     textAlign: "center",
   },
 });
@@ -93,14 +148,15 @@ const button = StyleSheet.create({
 const input = StyleSheet.create({
   input: {
     flex: 1,
-    padding: 0,
-    backgroundColor: "#585858",
-    borderRadius: 8,
+    backgroundColor: colors.surface,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
     color: colors.font,
     paddingVertical: 12,
-    paddingHorizontal: 12,
-    fontSize: 12,
-    height: 45,
+    paddingHorizontal: 14,
+    fontSize: 14,
+    height: 46,
   },
 });
 

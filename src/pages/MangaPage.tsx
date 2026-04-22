@@ -31,26 +31,25 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
   return (
     <Container withNavbar>
       <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: 8,
-          marginBottom: 8,
-        }}
+        style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}
       >
         <Button
+          variant="ghost"
           onPress={() => navigation.navigate("Search", { service })}
-          style={{ flex: 1 }}
         >
-          <Ionicons name="search" size={18} color={colors.font} />
+          <Ionicons name="arrow-back" size={20} color={colors.fontMuted} />
         </Button>
+
+        <View style={{ flex: 1 }} />
+
         <Button
+          variant="ghost"
           onPress={() => Linking.openURL(new service(slug).mangaUrl)}
-          style={{ flex: 1 }}
         >
-          <Feather name="external-link" size={18} color={colors.font} />
+          <Feather name="external-link" size={18} color={colors.fontMuted} />
         </Button>
       </View>
+
       <Image
         autoResize
         source={{
@@ -58,30 +57,58 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
           headers: service.headers,
         }}
         transition={200}
-        style={{ borderRadius: 8 }}
+        style={{ borderRadius: 12 }}
       />
+
       <Text
         style={[
           styles.text,
-          { fontSize: 24, fontWeight: "bold", marginTop: 12 },
+          { fontSize: 22, fontWeight: "700", marginTop: 14 },
         ]}
       >
         {manga?.title}
       </Text>
-      <Text style={[styles.text, { color: "#aaa", marginBottom: 8 }]}>
+      <Text style={[styles.textMuted, { marginTop: 4, marginBottom: 10 }]}>
         {manga?.author} • {manga?.type}
       </Text>
-      <Text style={[styles.text, { lineHeight: 22, marginBottom: 16 }]}>
+      <Text
+        style={[
+          styles.text,
+          { lineHeight: 22, marginBottom: 20, color: "#cccccc" },
+        ]}
+      >
         {manga?.description}
       </Text>
 
       {chapters.length > 0 && (
-        <Button
-          onPress={() => setChapters((old) => [...old].reverse())}
-          style={{ marginBottom: 12, marginLeft: "auto" }}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: 10,
+          }}
         >
-          <Ionicons name="swap-vertical" size={24} color="#fff" />
-        </Button>
+          <Text
+            style={[
+              styles.textMuted,
+              {
+                flex: 1,
+                fontSize: 12,
+                fontWeight: "600",
+                textTransform: "uppercase",
+                letterSpacing: 0.8,
+              },
+            ]}
+          >
+            {chapters.length} fejezet
+          </Text>
+          <Button
+            onPress={() => setChapters((old) => [...old].reverse())}
+            variant="ghost"
+          >
+            <Ionicons name="swap-vertical" size={20} color={colors.fontMuted} />
+          </Button>
+        </View>
       )}
 
       {chapters.map((chapter) => (
@@ -94,38 +121,49 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
               service: service,
             })
           }
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            paddingVertical: 11,
+            paddingHorizontal: 12,
+            marginBottom: 4,
+            backgroundColor: colors.surface,
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: colors.border,
+            gap: 10,
+          }}
         >
           <View
             style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              paddingVertical: 12,
+              backgroundColor: colors.primary + "28",
               paddingHorizontal: 8,
-              marginBottom: 4,
-              backgroundColor: "#2a2a2a",
-              borderRadius: 8,
+              paddingVertical: 3,
+              borderRadius: 6,
+              minWidth: 44,
+              alignItems: "center",
             }}
           >
             <Text
-              style={[styles.text, { flex: 1, marginRight: 8 }]}
-              numberOfLines={1}
-              ellipsizeMode="tail"
+              style={{ color: colors.primary, fontSize: 12, fontWeight: "700" }}
             >
-              {chapter.number}. | {chapter.title}
+              {chapter.number}
             </Text>
-            {chapter.publishedAt && (
-              <Text
-                style={[
-                  styles.text,
-                  { color: "#aaa", fontSize: 12, flexShrink: 0 },
-                ]}
-              >
-                {new Date(chapter.publishedAt).toLocaleDateString("hu-HU")}
-              </Text>
-            )}
           </View>
+          <Text
+            style={[styles.text, { flex: 1, fontSize: 13 }]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {chapter.title}
+          </Text>
+          {chapter.publishedAt && (
+            <Text
+              style={{ color: colors.fontMuted, fontSize: 11, flexShrink: 0 }}
+            >
+              {new Date(chapter.publishedAt).toLocaleDateString("hu-HU")}
+            </Text>
+          )}
         </TouchableOpacity>
       ))}
     </Container>

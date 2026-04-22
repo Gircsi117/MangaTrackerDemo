@@ -20,18 +20,23 @@ const NavbarItem: React.FC<Props> = ({ icon, title, to, params }) => {
     (state) => state.routes[state.index].name,
   );
 
+  const isActive = currentRoute === to;
+
   return (
     <TouchableOpacity
-      style={[styles.navbarItem]}
+      style={[
+        styles.navbarItem,
+        isActive && { backgroundColor: colors.primary + "22" },
+      ]}
       onPress={() => navigation.navigate(to, params as any)}
     >
       {React.cloneElement(icon, {
-        color: currentRoute == to ? colors.primary : "#fff",
+        color: isActive ? colors.primary : colors.fontMuted,
       })}
       <Text
         style={[
           styles.navbarItemText,
-          { color: currentRoute == to ? colors.primary : "#fff" },
+          { color: isActive ? colors.primary : colors.fontMuted },
         ]}
         numberOfLines={1}
         ellipsizeMode="tail"

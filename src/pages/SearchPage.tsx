@@ -1,4 +1,4 @@
-import React, { use, useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Container from "../components/Container";
 import { SearchPageProps } from "../types/navigation.type";
 import {
@@ -38,31 +38,34 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
   return (
     <Container withNavbar scrollRef={scrollRef}>
       <View
-        style={[
-          styles.mangaServiceItem,
-          { marginBottom: 8, backgroundColor: "transparent" },
-        ]}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 16,
+          paddingBottom: 16,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+        }}
       >
         <Image
           source={{
             uri: service.logoUrl,
             headers: service.headers,
           }}
-          style={{ width: 50, aspectRatio: 1, backgroundColor: undefined }}
+          style={{ width: 36, height: 36, borderRadius: 8, backgroundColor: undefined }}
         />
-        <Text style={[styles.text, { fontSize: 16, fontWeight: "bold" }]}>
+        <Text style={[styles.text, { fontSize: 18, fontWeight: "700" }]}>
           {service.name}
         </Text>
       </View>
 
       <View
         style={{
-          display: "flex",
           flexDirection: "row",
           gap: 8,
           marginBottom: 16,
           alignItems: "center",
-          justifyContent: "center",
         }}
       >
         <TextInput
@@ -70,24 +73,22 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
           onChangeText={setQuery}
           onSubmitEditing={handleSearch}
           placeholder="Keresés..."
-          placeholderTextColor="#aaa"
+          placeholderTextColor={colors.fontMuted}
           returnKeyType="search"
           style={styles.input}
         />
-
-        <Button
-          onPress={clearSearch}
-          style={{ display: query ? "flex" : "none", width: 60 }}
-        >
-          <Entypo name="cross" size={18} color={colors.font} />
-        </Button>
+        {!!query && (
+          <Button onPress={clearSearch} style={{ width: 46, paddingHorizontal: 0 }}>
+            <Entypo name="cross" size={18} color={colors.font} />
+          </Button>
+        )}
       </View>
 
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
         {mangas.map((manga) => (
           <TouchableOpacity
             key={String(manga.id)}
-            style={{ width: "48.5%" }}
+            style={{ width: "48%" }}
             onPress={() =>
               navigation.navigate("Manga", {
                 slug: manga.slug,
@@ -95,17 +96,26 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
               })
             }
           >
-            <Image
-              source={{
-                uri: manga.coverUrl,
-                headers: service.headers,
+            <View
+              style={{
+                borderRadius: 10,
+                overflow: "hidden",
+                borderWidth: 1,
+                borderColor: colors.border,
               }}
-              style={[styles.image, { borderRadius: 8, aspectRatio: 2 / 3 }]}
-              recyclingKey={String(manga.id)}
-              transition={200}
-            />
+            >
+              <Image
+                source={{
+                  uri: manga.coverUrl,
+                  headers: service.headers,
+                }}
+                style={[styles.image, { aspectRatio: 2 / 3 }]}
+                recyclingKey={String(manga.id)}
+                transition={200}
+              />
+            </View>
             <Text
-              style={[styles.text, { marginTop: 4, fontSize: 12 }]}
+              style={[styles.text, { marginTop: 6, fontSize: 12 }]}
               numberOfLines={2}
             >
               {manga.title}
@@ -115,8 +125,8 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
       </View>
 
       {totalPages > 1 && (
-        <View style={{ marginTop: 16, marginBottom: 8 }}>
-          <Text style={[styles.text, { marginBottom: 8, color: "#aaa" }]}>
+        <View style={{ marginTop: 20, marginBottom: 8 }}>
+          <Text style={[styles.textMuted, { marginBottom: 10, fontSize: 13 }]}>
             {page} / {totalPages} oldal
           </Text>
           <FlatList
@@ -124,7 +134,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
             data={Array.from({ length: totalPages }, (_, i) => i + 1)}
             keyExtractor={(p) => String(p)}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 8, marginTop: 16, marginBottom: 8 }}
+            contentContainerStyle={{ gap: 6 }}
             renderItem={({ item: p }) => (
               <TouchableOpacity
                 onPress={() => {
@@ -132,15 +142,24 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
                   handlePageChange(p);
                 }}
                 style={{
-                  width: 36,
-                  height: 36,
+                  width: 38,
+                  height: 38,
                   borderRadius: 8,
                   justifyContent: "center",
                   alignItems: "center",
-                  backgroundColor: p === page ? colors.primary : "#585858",
+                  backgroundColor: p === page ? colors.primary : colors.surface,
+                  borderWidth: 1,
+                  borderColor: p === page ? colors.primary : colors.border,
                 }}
               >
-                <Text style={styles.text}>{p}</Text>
+                <Text
+                  style={[
+                    styles.text,
+                    { fontSize: 13, fontWeight: p === page ? "700" : "400" },
+                  ]}
+                >
+                  {p}
+                </Text>
               </TouchableOpacity>
             )}
           />

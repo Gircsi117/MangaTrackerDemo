@@ -6,14 +6,14 @@ import AsuraScansService from "../services/asurascans.service";
 import MangaBuddyService from "../services/mangabuddy.service";
 import MangaDexHuService from "../services/mangadex-hu.service";
 import ToonVerseService from "../services/toonverse.service";
-import styles from "../styles/styles";
+import styles, { colors } from "../styles/styles";
 import { Text, TouchableOpacity, View } from "react-native";
-import { Image as RNImage } from "expo-image";
 import PadlizsanFanSubService from "../services/padlizsanfansub.service";
 import MangaDexEnService from "../services/mangadex-en.service";
 import NHentaiService from "../services/nhentai.service";
 import Image from "../components/Image";
 import ManhwaManiaService from "../services/manhwamania.service";
+import { Ionicons } from "@expo/vector-icons";
 
 const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
   const services: MangaPageConstructor[] = [
@@ -29,24 +29,28 @@ const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
 
   return (
     <Container withNavbar>
-      <View style={{ display: "flex", gap: 8 }}>
-        {services.map((service) => (
-          <TouchableOpacity
-            key={service.id}
-            style={styles.mangaServiceItem}
-            onPress={() => navigation.navigate("Search", { service })}
-          >
-            <Image
-              source={{
-                uri: service.logoUrl,
-                headers: service.headers,
-              }}
-              style={{ width: 50, aspectRatio: 1 }}
-            />
-            <Text style={[styles.text, { fontSize: 16, fontWeight: "bold" }]}>
-              {service.name}
-            </Text>
-          </TouchableOpacity>
+      <Text style={styles.sectionHeader}>Források</Text>
+      <View style={[styles.card, { marginTop: 0 }]}>
+        {services.map((service, index) => (
+          <React.Fragment key={service.id}>
+            <TouchableOpacity
+              style={styles.row}
+              onPress={() => navigation.navigate("Search", { service })}
+            >
+              <Image
+                source={{
+                  uri: service.logoUrl,
+                  headers: service.headers,
+                }}
+                style={{ width: 36, height: 36, borderRadius: 8, backgroundColor: undefined }}
+              />
+              <Text style={[styles.text, { flex: 1, fontSize: 15, fontWeight: "600" }]}>
+                {service.name}
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color={colors.fontMuted} />
+            </TouchableOpacity>
+            {index < services.length - 1 && <View style={styles.separator} />}
+          </React.Fragment>
         ))}
       </View>
     </Container>
