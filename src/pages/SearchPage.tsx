@@ -49,37 +49,42 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
     [handlePageChange],
   );
 
+  // A Render item 2x fut le és a 2. lefutás után jelennek csak meg az elemek, emiatt tovább tölt
   const renderItem = useCallback(
-    ({ item: manga }: { item: Manga }) => (
-      <TouchableOpacity
-        style={{ flex: 1 }}
-        onPress={() =>
-          navigation.navigate("Manga", { slug: manga.slug, service })
-        }
-      >
-        <View
-          style={{
-            borderRadius: 10,
-            overflow: "hidden",
-            borderWidth: 1,
-            borderColor: colors.border,
-          }}
+    ({ item: manga }: { item: Manga }) => {
+      console.log(manga.title);
+
+      return (
+        <TouchableOpacity
+          style={{ flex: 1, marginBottom: 10 }}
+          onPress={() =>
+            navigation.navigate("Manga", { slug: manga.slug, service })
+          }
         >
-          <Image
-            source={{ uri: manga.coverUrl, headers: service.headers }}
-            style={[styles.image, { aspectRatio: 2 / 3 }]}
-            recyclingKey={String(manga.id)}
-            transition={200}
-          />
-        </View>
-        <Text
-          style={[styles.text, { marginTop: 6, fontSize: 12 }]}
-          numberOfLines={2}
-        >
-          {manga.title}
-        </Text>
-      </TouchableOpacity>
-    ),
+          <View
+            style={{
+              borderRadius: 10,
+              overflow: "hidden",
+              borderWidth: 1,
+              borderColor: colors.border,
+            }}
+          >
+            <Image
+              source={{ uri: manga.coverUrl, headers: service.headers }}
+              style={[styles.image, { aspectRatio: 2 / 3 }]}
+              recyclingKey={String(manga.id)}
+              transition={200}
+            />
+          </View>
+          <Text
+            style={[styles.text, { marginTop: 6, fontSize: 12 }]}
+            numberOfLines={2}
+          >
+            {manga.title}
+          </Text>
+        </TouchableOpacity>
+      );
+    },
     [navigation, service],
   );
 
@@ -145,7 +150,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
         keyExtractor={(manga) => String(manga.id)}
         numColumns={2}
         columnWrapperStyle={{ gap: 10 }}
-        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        //ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
         contentContainerStyle={{ padding: 12 }}
         renderItem={renderItem}
         ListHeaderComponent={ListHeader}
