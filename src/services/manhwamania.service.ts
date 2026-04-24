@@ -16,7 +16,7 @@ class ManhwaManiaService extends MangaPage {
   protected static readonly origin = "https://manhwamania.hu";
   protected static readonly referer: string = "https://manhwamania.hu";
   public static readonly logoUrl: string =
-    "https://1000logos.net/wp-content/uploads/2022/02/Manhwaindo-Logo.png";
+    "https://iconape.com/wp-content/png_logo_vector/manga-logo.png";
 
   private static readonly axios = axios.create({
     baseURL: this.origin + "/api",

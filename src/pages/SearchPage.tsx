@@ -49,11 +49,8 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
     [handlePageChange],
   );
 
-  // A Render item 2x fut le és a 2. lefutás után jelennek csak meg az elemek, emiatt tovább tölt
   const renderItem = useCallback(
     ({ item: manga }: { item: Manga }) => {
-      console.log(manga.title);
-
       return (
         <TouchableOpacity
           style={{ flex: 1, marginBottom: 10 }}
@@ -74,6 +71,8 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
               style={[styles.image, { aspectRatio: 2 / 3 }]}
               recyclingKey={String(manga.id)}
               transition={200}
+              contentFit="fill"
+              allowDownscaling={true}
             />
           </View>
           <Text
@@ -94,9 +93,10 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
         service={service}
         onSearch={handleSearch}
         onClear={clearSearch}
+        onBack={() => navigation.goBack()}
       />
     ),
-    [service, handleSearch, clearSearch],
+    [service, handleSearch, clearSearch, navigation],
   );
 
   const ListFooter = useMemo(
@@ -150,9 +150,9 @@ const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
         keyExtractor={(manga) => String(manga.id)}
         numColumns={2}
         columnWrapperStyle={{ gap: 10 }}
-        //ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
         contentContainerStyle={{ padding: 12 }}
         renderItem={renderItem}
+        removeClippedSubviews
         ListHeaderComponent={ListHeader}
         ListFooterComponent={ListFooter}
         ListEmptyComponent={

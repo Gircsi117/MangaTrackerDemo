@@ -14,6 +14,7 @@ import NHentaiService from "../services/nhentai.service";
 import Image from "../components/Image";
 import ManhwaManiaService from "../services/manhwamania.service";
 import { Ionicons } from "@expo/vector-icons";
+import KecskeFanSubService from "../services/kecskefansub.service";
 
 const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
   const services: MangaPageConstructor[] = [
@@ -25,6 +26,7 @@ const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
     PadlizsanFanSubService,
     NHentaiService,
     ManhwaManiaService,
+    KecskeFanSubService,
   ].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
@@ -42,12 +44,26 @@ const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
                   uri: service.logoUrl,
                   headers: service.headers,
                 }}
-                style={{ width: 36, height: 36, borderRadius: 8, backgroundColor: undefined }}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 8,
+                  backgroundColor: undefined,
+                }}
               />
-              <Text style={[styles.text, { flex: 1, fontSize: 15, fontWeight: "600" }]}>
+              <Text
+                style={[
+                  styles.text,
+                  { flex: 1, fontSize: 15, fontWeight: "600" },
+                ]}
+              >
                 {service.name}
               </Text>
-              <Ionicons name="chevron-forward" size={18} color={colors.fontMuted} />
+              <Ionicons
+                name="chevron-forward"
+                size={18}
+                color={colors.fontMuted}
+              />
             </TouchableOpacity>
             {index < services.length - 1 && <View style={styles.separator} />}
           </React.Fragment>

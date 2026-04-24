@@ -1,19 +1,20 @@
 import React, { memo, useCallback, useState } from "react";
 import { MangaPageConstructor } from "../types/manga.type";
-import { Text, TextInput, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles, { colors } from "../styles/styles";
 import Image from "./Image";
 import Button from "./Button";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 
 type SearchHeaderProps = {
   service: MangaPageConstructor;
   onSearch: (query: string) => void;
   onClear: () => void;
+  onBack?: () => void;
 };
 
 const SearchHeader = memo(
-  ({ service, onSearch, onClear }: SearchHeaderProps) => {
+  ({ service, onSearch, onClear, onBack }: SearchHeaderProps) => {
     const [value, setValue] = useState("");
 
     const handleSubmit = useCallback(() => {
@@ -38,6 +39,11 @@ const SearchHeader = memo(
             borderBottomColor: colors.border,
           }}
         >
+          {onBack && (
+            <TouchableOpacity onPress={onBack} hitSlop={8}>
+              <Ionicons name="chevron-back" size={24} color={colors.font} />
+            </TouchableOpacity>
+          )}
           <Image
             source={{ uri: service.logoUrl, headers: service.headers }}
             style={{

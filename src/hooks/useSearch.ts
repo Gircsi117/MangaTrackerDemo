@@ -17,19 +17,28 @@ type UseSearchResult = {
   clearSearch: () => void;
 };
 
+type SearchResult = {
+  mangas: Manga[];
+  totalCount: number;
+  isLoading: boolean;
+};
+
 const DEFAULT_LIMIT = 20;
 
 const useSearch = (service: MangaPageConstructor): UseSearchResult => {
   const [limit, setLimit] = useState(DEFAULT_LIMIT);
   const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const [mangas, setMangas] = useState<Manga[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState<SearchResult>({
+    mangas: [],
+    totalCount: 0,
+    isLoading: false,
+  });
 
   const requestIdRef = useRef(0);
   const currentQueryRef = useRef("");
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  const { mangas, totalCount, isLoading } = result;
   const totalPages = Math.ceil(totalCount / limit);
 
   useEffect(() => {
@@ -49,10 +58,7 @@ const useSearch = (service: MangaPageConstructor): UseSearchResult => {
       const { signal } = abortControllerRef.current;
 
       const requestId = ++requestIdRef.current;
-      setMangas([]);
-      setIsLoading(true);
-      await new Promise<void>((resolve) => setTimeout(resolve, 0));
-      if (requestId !== requestIdRef.current) return;
+      setResult({ mangas: [], totalCount: 0, isLoading: true });
       try {
         const { items, totalCount } = await service.search({
           query: currentQuery.trim(),
@@ -67,18 +73,12 @@ const useSearch = (service: MangaPageConstructor): UseSearchResult => {
           setLimit(items.length);
         }
 
-        setMangas(items);
-        setTotalCount(totalCount);
+        setResult({ mangas: items, totalCount, isLoading: false });
       } catch (error: any) {
         if (error?.name === "AbortError" || error?.code === "ERR_CANCELED")
           return;
         if (requestId !== requestIdRef.current) return;
-        setMangas([]);
-        setTotalCount(0);
-      } finally {
-        if (requestId === requestIdRef.current) {
-          setIsLoading(false);
-        }
+        setResult({ mangas: [], totalCount: 0, isLoading: false });
       }
     },
     [service],
@@ -106,8 +106,7 @@ const useSearch = (service: MangaPageConstructor): UseSearchResult => {
     currentQueryRef.current = "";
     setPage(1);
     setLimit(DEFAULT_LIMIT);
-    setTotalCount(0);
-    setMangas([]);
+    setResult({ mangas: [], totalCount: 0, isLoading: false });
     search(1, DEFAULT_LIMIT, "");
   }, [search]);
 
