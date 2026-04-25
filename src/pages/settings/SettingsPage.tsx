@@ -1,9 +1,9 @@
 import React from "react";
-import Container from "../components/Container";
-import { SettingsPageProps } from "../types/navigation.type";
-import DrizzleDB from "../db/db";
+import Container from "../../components/Container";
+import { SettingsPageProps } from "../../types/navigation.type";
+import DrizzleDB from "../../db/db";
 import { Text, TouchableOpacity, View } from "react-native";
-import styles, { colors } from "../styles/styles";
+import styles, { colors } from "../../styles/styles";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 const SettingsPage: React.FC<SettingsPageProps> = ({ navigation }) => {
@@ -40,7 +40,11 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ navigation }) => {
           style={styles.row}
           onPress={() => DrizzleDB.exportMainData()}
         >
-          <Ionicons name="download-outline" size={20} color={colors.fontMuted} />
+          <Ionicons
+            name="download-outline"
+            size={20}
+            color={colors.fontMuted}
+          />
           <Text style={[styles.text, { flex: 1, fontSize: 15 }]}>
             Adatbázis exportálása
           </Text>

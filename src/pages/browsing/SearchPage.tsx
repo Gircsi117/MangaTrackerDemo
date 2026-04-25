@@ -5,8 +5,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-import Container from "../components/Container";
-import { SearchPageProps } from "../types/navigation.type";
+import Container from "../../components/Container";
+import { SearchPageProps } from "../../types/navigation.type";
 import {
   ActivityIndicator,
   FlatList,
@@ -15,12 +15,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import styles, { colors } from "../styles/styles";
-import useSearch from "../hooks/useSearch";
+import styles, { colors } from "../../styles/styles";
+import useSearch from "../../hooks/useSearch";
 
-import Image from "../components/Image";
-import { Manga } from "../types/manga.type";
-import SearchHeader from "../components/SearchHeader";
+import Image from "../../components/Image";
+import { Manga } from "../../types/manga.type";
+import SearchHeader from "../../components/SearchHeader";
 
 const SearchPage: React.FC<SearchPageProps> = ({ route, navigation }) => {
   const { service } = route.params;

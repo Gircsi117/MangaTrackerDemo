@@ -1,11 +1,11 @@
 import React from "react";
-import Container from "../components/Container";
-import { CredentialsPageProps } from "../types/navigation.type";
+import Container from "../../components/Container";
+import { CredentialsPageProps } from "../../types/navigation.type";
 import { Text, View } from "react-native";
-import styles from "../styles/styles";
-import CredentialSetter from "../components/CredentialSetter";
-import PadlizsanFanSubService from "../services/padlizsanfansub.service";
-import KecskeFanSubService from "../services/kecskefansub.service";
+import styles from "../../styles/styles";
+import CredentialSetter from "../../components/CredentialSetter";
+import PadlizsanFanSubService from "../../services/padlizsanfansub.service";
+import KecskeFanSubService from "../../services/kecskefansub.service";
 
 const CredentialsPage: React.FC<CredentialsPageProps> = () => {
   return (

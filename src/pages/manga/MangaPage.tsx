@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Container from "../components/Container";
-import { MangaPageProps } from "../types/navigation.type";
-import { Chapter, Manga } from "../types/manga.type";
+import Container from "../../components/Container";
+import { MangaPageProps } from "../../types/navigation.type";
+import { Chapter, Manga } from "../../types/manga.type";
 import { Text, TouchableOpacity, View } from "react-native";
-import styles, { colors } from "../styles/styles";
-import Button from "../components/Button";
+import styles, { colors } from "../../styles/styles";
+import Button from "../../components/Button";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { Linking } from "react-native";
-import Image from "../components/Image";
+import Image from "../../components/Image";
 
 const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
   const { slug, service } = route.params;

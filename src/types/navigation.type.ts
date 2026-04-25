@@ -1,6 +1,11 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ChapterSlug, MangaPageConstructor } from "./manga.type";
 
+export type SettingsTabsParamList = {
+  Setting: undefined;
+  Credentials: undefined;
+};
+
 export type RootStackParamList = {
   Library: undefined;
   History: undefined;

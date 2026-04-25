@@ -1,20 +1,20 @@
 import React from "react";
-import Container from "../components/Container";
-import { BrowsingPageProps } from "../types/navigation.type";
-import { MangaPageConstructor } from "../types/manga.type";
-import AsuraScansService from "../services/asurascans.service";
-import MangaBuddyService from "../services/mangabuddy.service";
-import MangaDexHuService from "../services/mangadex-hu.service";
-import ToonVerseService from "../services/toonverse.service";
-import styles, { colors } from "../styles/styles";
+import Container from "../../components/Container";
+import { BrowsingPageProps } from "../../types/navigation.type";
+import { MangaPageConstructor } from "../../types/manga.type";
+import AsuraScansService from "../../services/asurascans.service";
+import MangaBuddyService from "../../services/mangabuddy.service";
+import MangaDexHuService from "../../services/mangadex-hu.service";
+import ToonVerseService from "../../services/toonverse.service";
+import styles, { colors } from "../../styles/styles";
 import { Text, TouchableOpacity, View } from "react-native";
-import PadlizsanFanSubService from "../services/padlizsanfansub.service";
-import MangaDexEnService from "../services/mangadex-en.service";
-import NHentaiService from "../services/nhentai.service";
-import Image from "../components/Image";
-import ManhwaManiaService from "../services/manhwamania.service";
+import PadlizsanFanSubService from "../../services/padlizsanfansub.service";
+import MangaDexEnService from "../../services/mangadex-en.service";
+import NHentaiService from "../../services/nhentai.service";
+import Image from "../../components/Image";
+import ManhwaManiaService from "../../services/manhwamania.service";
 import { Ionicons } from "@expo/vector-icons";
-import KecskeFanSubService from "../services/kecskefansub.service";
+import KecskeFanSubService from "../../services/kecskefansub.service";
 
 const BrowsingPage: React.FC<BrowsingPageProps> = ({ navigation }) => {
   const services: MangaPageConstructor[] = [

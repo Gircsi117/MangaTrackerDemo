@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import Container from "../components/Container";
-import { ChapterPageProps } from "../types/navigation.type";
-import { Chapter, ChapterPage as ChapterPageType } from "../types/manga.type";
+import Container from "../../components/Container";
+import { ChapterPageProps } from "../../types/navigation.type";
+import { Chapter, ChapterPage as ChapterPageType } from "../../types/manga.type";
 import { FlatList, ImageSize, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import MangaPage from "../modules/manga-page.module";
-import PageImage from "../components/PageImage";
+import MangaPage from "../../modules/manga-page.module";
+import PageImage from "../../components/PageImage";
 import { Ionicons } from "@expo/vector-icons";
-import Button from "../components/Button";
-import styles from "../styles/styles";
+import Button from "../../components/Button";
+import styles from "../../styles/styles";
 
 type ChapterState = {
   pages: ChapterPageType[];
