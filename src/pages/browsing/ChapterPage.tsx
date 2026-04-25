@@ -32,9 +32,9 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const flatListRef = useRef<FlatList>(null);
 
   const [state, setState] = useState<ChapterContent>(EMPTY_STATE);
-  const [showControls, setShowControls] = useState(false);
-
   const { pages, currentChapter, nextChapter, prevChapter } = state;
+
+  const [showControls, setShowControls] = useState(false);
 
   const getPages = useCallback(async () => {
     const { pages, currentChapter, nextChapter, prevChapter } =

@@ -21,7 +21,8 @@
         "backgroundColor": "#1f1f1f"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.MangaTracker"
     },
     "web": {
       "favicon": "./assets/favicon.png"

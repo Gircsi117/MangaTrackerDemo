@@ -125,14 +125,13 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
         }}
       >
         <Image
-          defaultAspectRatio={2 / 3}
           contentFit="fill"
           source={{
             uri: manga?.coverUrl,
             headers: service.headers,
           }}
           transition={200}
-          style={{ borderRadius: 12, flex: 1 }}
+          style={{ borderRadius: 12, flex: 1, aspectRatio: 2 / 3 }}
         />
         <View style={{ flex: 2 }}>
           <Text

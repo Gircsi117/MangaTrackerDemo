@@ -32,7 +32,6 @@ const base = StyleSheet.create({
   image: {
     backgroundColor: colors.imagePlaceholder,
     width: "100%",
-    height: undefined,
   },
   card: {
     backgroundColor: colors.surface,
