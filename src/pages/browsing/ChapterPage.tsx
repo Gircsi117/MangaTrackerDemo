@@ -5,13 +5,15 @@ import {
   ChapterContent,
   ChapterPage as ChapterPageType,
 } from "../../types/manga.type";
-import { FlatList, ImageSize, Text, View } from "react-native";
+import { FlatList, ImageSize, StatusBar, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import PageImage from "../../components/PageImage";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../../components/Button";
 import styles from "../../styles/styles";
 import MangaService from "../../services/manga.service";
+import { useFocusEffect } from "@react-navigation/native";
+import * as NavigationBar from "expo-navigation-bar";
 
 const EMPTY_STATE: ChapterContent = {
   pages: [],
@@ -60,6 +62,18 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
     getPages();
   }, [chapterSlug]);
 
+  useFocusEffect(
+    useCallback(() => {
+      NavigationBar.setVisibilityAsync("hidden");
+      StatusBar.setHidden(true);
+
+      return () => {
+        NavigationBar.setVisibilityAsync("visible");
+        StatusBar.setHidden(false);
+      };
+    }, []),
+  );
+
   const toggleControls = useCallback(() => setShowControls((old) => !old), []);
 
   const onSizeLoad = useCallback(
@@ -93,7 +107,7 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   );
 
   return (
-    <Container noSroll>
+    <Container noSroll edges={[]}>
       <FlatList
         ref={flatListRef}
         data={pages}

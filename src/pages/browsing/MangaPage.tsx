@@ -2,18 +2,31 @@ import React, { useCallback, useEffect, useState } from "react";
 import Container from "../../components/Container";
 import { MangaPageProps } from "../../types/navigation.type";
 import { Chapter, Manga } from "../../types/manga.type";
-import { Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import styles, { colors } from "../../styles/styles";
 import Button from "../../components/Button";
-import { Ionicons, Feather, Fontisto, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons, Feather, FontAwesome5 } from "@expo/vector-icons";
 import { Linking } from "react-native";
 import Image from "../../components/Image";
+import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
   const { slug, service } = route.params;
 
   const [manga, setManga] = useState<Manga | null>(null);
   const [chapters, setChapters] = useState<Chapter[]>([]);
+
+  const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     const getManga = async () => {
@@ -46,9 +59,45 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
   );
 
   return (
-    <Container withNavbar>
+    <Container withNavbar edges={[]}>
       <View
-        style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}
+        style={{
+          width: width,
+          height: 300,
+          position: "absolute",
+          top: 0,
+          left: 0,
+        }}
+      >
+        <Image
+          contentFit="cover"
+          source={{
+            uri: manga?.coverUrl,
+            headers: service.headers,
+          }}
+          transition={200}
+          style={{
+            width: "100%",
+            height: "100%",
+            aspectRatio: "auto",
+            opacity: 0.5,
+          }}
+          blurRadius={10}
+        />
+        <LinearGradient
+          colors={["transparent", colors.background]}
+          style={StyleSheet.absoluteFill}
+          locations={[0, 1]}
+        />
+      </View>
+
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 12,
+          marginTop: insets.top,
+        }}
       >
         <Button
           variant="ghost"
@@ -184,7 +233,11 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
             }}
           >
             <Text
-              style={{ color: colors.primary, fontSize: 12, fontWeight: "700" }}
+              style={{
+                color: colors.primary,
+                fontSize: 12,
+                fontWeight: "700",
+              }}
             >
               {chapter.number}
             </Text>
