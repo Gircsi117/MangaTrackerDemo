@@ -112,9 +112,9 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
         ref={flatListRef}
         data={pages}
         keyExtractor={(page) => page.id}
-        initialNumToRender={5}
-        windowSize={7}
-        maxToRenderPerBatch={5}
+        initialNumToRender={4}
+        windowSize={6}
+        maxToRenderPerBatch={4}
         maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
         renderItem={renderItem}
       />

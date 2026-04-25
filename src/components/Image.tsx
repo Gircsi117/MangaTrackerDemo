@@ -19,7 +19,7 @@ const Image: React.FC<Props> = ({
       {...props}
       contentFit={props.contentFit || "contain"}
       style={[{ aspectRatio }, styles.image, props.style]}
-      allowDownscaling={props.allowDownscaling || false}
+      allowDownscaling={props.allowDownscaling ?? false}
       onLoad={(e) => {
         if (autoResize) {
           const { width, height } = e.source;

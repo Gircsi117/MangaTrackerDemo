@@ -42,11 +42,11 @@ importers:
         specifier: ~3.0.11
         version: 3.0.11(expo@54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       expo-linear-gradient:
-        specifier: ^55.0.8
-        version: 55.0.13(expo@54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        specifier: ^15.0.8
+        version: 15.0.8(expo@54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       expo-navigation-bar:
-        specifier: ^55.0.10
-        version: 55.0.12(expo@54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        specifier: ^5.0.10
+        version: 5.0.10(expo@54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       expo-secure-store:
         specifier: ~15.0.8
         version: 15.0.8(expo@54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))
@@ -2088,8 +2088,8 @@ packages:
       expo: '*'
       react: '*'
 
-  expo-linear-gradient@55.0.13:
-    resolution: {integrity: sha512-Qz2T4jpkA15RIk29DBqI1TwW+8O9AN8MyC4TJPbh/5UnihH0yNNz3waplUO8Szh5OZ3czTGvtPQU4ysF3RDxwQ==}
+  expo-linear-gradient@15.0.8:
+    resolution: {integrity: sha512-V2d8Wjn0VzhPHO+rrSBtcl+Fo+jUUccdlmQ6OoL9/XQB7Qk3d9lYrqKDJyccwDxmQT10JdST3Tmf2K52NLc3kw==}
     peerDependencies:
       expo: '*'
       react: '*'
@@ -2110,8 +2110,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  expo-navigation-bar@55.0.12:
-    resolution: {integrity: sha512-G7olnyAqGd7I3hLFAgP4WdcZFMD9pV6UY79P7EHyRdMuRZrYJfDdwcelyYB2+tekOdQEktZ3WlLVK+uS7f7TYw==}
+  expo-navigation-bar@5.0.10:
+    resolution: {integrity: sha512-r9rdLw8mY6GPMQmVVOY/r1NBBw74DZefXHF60HxhRsdNI2kjc1wLdfWfR2rk4JVdOvdMDujnGrc9HQmqM3n8Jg==}
     peerDependencies:
       expo: '*'
       react: '*'
@@ -5767,7 +5767,7 @@ snapshots:
       expo: 54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react: 19.1.0
 
-  expo-linear-gradient@55.0.13(expo@54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
+  expo-linear-gradient@15.0.8(expo@54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
     dependencies:
       expo: 54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react: 19.1.0
@@ -5795,8 +5795,9 @@ snapshots:
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
 
-  expo-navigation-bar@55.0.12(expo@54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
+  expo-navigation-bar@5.0.10(expo@54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
     dependencies:
+      '@react-native/normalize-colors': 0.81.5
       debug: 4.4.3
       expo: 54.0.33(@babel/core@7.29.0)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react: 19.1.0
