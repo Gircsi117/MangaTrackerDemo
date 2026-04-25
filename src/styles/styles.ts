@@ -7,7 +7,7 @@ export const colors = {
   background: "#111111",
   surface: "#1c1c1c",
   surfaceElevated: "#262626",
-  border: "#2c2c2c",
+  border: "#505050",
   imagePlaceholder: "#2a2a2a",
   danger: "#e24a4a",
 } as const;

@@ -1,5 +1,4 @@
 import axios from "axios";
-import MangaPage from "../modules/manga-page.module";
 import {
   Chapter,
   ChapterContent,
@@ -7,11 +6,12 @@ import {
   ChapterSlug,
   Manga,
   MangaPageConstructor,
-} from "../types/manga.type";
+} from "../../types/manga.type";
 import { parse } from "node-html-parser";
-import { List, ListParams } from "../types/list.types";
+import { List, ListParams } from "../../types/list.types";
+import MangaService from "../manga.service";
 
-class AsuraScansService extends MangaPage {
+class AsuraScansService extends MangaService {
   public static readonly id = "asurascans";
   public static readonly name = "AsuraScans";
   protected static readonly origin = "https://asurascans.com";

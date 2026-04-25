@@ -1,6 +1,5 @@
 import axios from "axios";
-import MangaPage from "../modules/manga-page.module";
-import { ListParams, List } from "../types/list.types";
+import { ListParams, List } from "../../types/list.types";
 import {
   Chapter,
   ChapterContent,
@@ -8,11 +7,11 @@ import {
   ChapterSlug,
   Manga,
   MangaPageConstructor,
-} from "../types/manga.type";
-import { parse, HTMLElement } from "node-html-parser";
+} from "../../types/manga.type";
 import { v4 as uuidv4 } from "uuid";
+import MangaService from "../manga.service";
 
-class NHentaiService extends MangaPage {
+class NHentaiService extends MangaService {
   public static readonly id: string = "nhentai";
   public static readonly name: string = "NHentai";
   protected static readonly origin = "https://nhentai.net";

@@ -1,12 +1,13 @@
-import MangaPage from "../modules/manga-page.module";
+import MangaService from "../services/manga.service";
 import { List, ListParams } from "./list.types";
 
 export type MangaPageConstructor = {
-  new (slug: string): MangaPage;
+  new (slug: string): MangaService;
   readonly id: string;
   readonly name: string;
   readonly logoUrl: string;
-  readonly headers: typeof MangaPage.headers;
+  readonly headers: typeof MangaService.headers;
+  readonly needLogin: boolean;
   search(params?: ListParams): Promise<List<Manga>>;
 };
 

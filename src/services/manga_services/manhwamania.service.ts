@@ -1,5 +1,4 @@
 import axios from "axios";
-import MangaPage from "../modules/manga-page.module";
 import {
   Chapter,
   ChapterContent,
@@ -7,10 +6,12 @@ import {
   ChapterSlug,
   Manga,
   MangaPageConstructor,
-} from "../types/manga.type";
-import { ListParams, List } from "../types/list.types";
+} from "../../types/manga.type";
+import { ListParams, List } from "../../types/list.types";
 import { v4 as uuidv4 } from "uuid";
-class ManhwaManiaService extends MangaPage {
+import MangaService from "../manga.service";
+
+class ManhwaManiaService extends MangaService {
   public static readonly id: string = "manhwamania";
   public static readonly name: string = "ManhwaMania";
   protected static readonly origin = "https://manhwamania.hu";

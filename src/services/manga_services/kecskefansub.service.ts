@@ -1,6 +1,5 @@
 import axios from "axios";
-import MangaPage from "../modules/manga-page.module";
-import { ListParams, List } from "../types/list.types";
+import { ListParams, List } from "../../types/list.types";
 import {
   Chapter,
   ChapterContent,
@@ -8,18 +7,20 @@ import {
   ChapterSlug,
   Manga,
   MangaPageConstructor,
-} from "../types/manga.type";
+} from "../../types/manga.type";
 import parse from "node-html-parser";
 import { v4 as uuidv4 } from "uuid";
-import useCredentialsStore from "../stores/credentials.store";
+import useCredentialsStore from "../../stores/credentials.store";
+import MangaService from "../manga.service";
 
-class KecskeFanSubService extends MangaPage {
+class KecskeFanSubService extends MangaService {
   static id = "kecskefansub";
   static name = "KecskeFanSub";
   protected static readonly origin = "https://www.kecskefansub.com";
   protected static readonly referer = "https://www.kecskefansub.com/";
   public static readonly logoUrl =
     "https://www.kecskefansub.com/images/menu/logo.png";
+  public static needLogin: boolean = true;
 
   private static readonly axios = (() => {
     const instance = axios.create({

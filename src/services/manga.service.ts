@@ -2,12 +2,11 @@ import { List, ListParams } from "../types/list.types";
 import {
   Chapter,
   ChapterContent,
-  ChapterPage,
   ChapterSlug,
   Manga,
 } from "../types/manga.type";
 
-abstract class MangaPage {
+abstract class MangaService {
   public static readonly logoUrl: string = "";
 
   protected slug: string;
@@ -20,6 +19,7 @@ abstract class MangaPage {
   protected static readonly referer: string;
   private static readonly userAgent =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+  public static readonly needLogin: boolean = false;
 
   public static get headers() {
     return {
@@ -64,4 +64,4 @@ abstract class MangaPage {
   }
 }
 
-export default MangaPage;
+export default MangaService;

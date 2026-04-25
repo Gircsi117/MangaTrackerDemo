@@ -4,10 +4,13 @@ import { CredentialsPageProps } from "../../types/navigation.type";
 import { Text, View } from "react-native";
 import styles from "../../styles/styles";
 import CredentialSetter from "../../components/CredentialSetter";
-import PadlizsanFanSubService from "../../services/padlizsanfansub.service";
-import KecskeFanSubService from "../../services/kecskefansub.service";
+import PadlizsanFanSubService from "../../services/manga_services/padlizsanfansub.service";
+import KecskeFanSubService from "../../services/manga_services/kecskefansub.service";
+import mangaServicesRegistry from "../../registry/manga-services.registry";
 
 const CredentialsPage: React.FC<CredentialsPageProps> = () => {
+  const services = mangaServicesRegistry.filter((x) => x.needLogin);
+
   return (
     <Container withNavbar>
       <Text
@@ -23,15 +26,9 @@ const CredentialsPage: React.FC<CredentialsPageProps> = () => {
       </Text>
 
       <View style={{ display: "flex", gap: 16 }}>
-        <CredentialSetter
-          id={PadlizsanFanSubService.id}
-          name={PadlizsanFanSubService.name}
-        />
-
-        <CredentialSetter
-          id={KecskeFanSubService.id}
-          name={KecskeFanSubService.name}
-        />
+        {services.map((x) => (
+          <CredentialSetter key={x.id} id={x.id} name={x.name} />
+        ))}
       </View>
     </Container>
   );

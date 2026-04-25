@@ -1,23 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Container from "../../components/Container";
 import { ChapterPageProps } from "../../types/navigation.type";
-import { Chapter, ChapterPage as ChapterPageType } from "../../types/manga.type";
+import {
+  ChapterContent,
+  ChapterPage as ChapterPageType,
+} from "../../types/manga.type";
 import { FlatList, ImageSize, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import MangaPage from "../../modules/manga-page.module";
 import PageImage from "../../components/PageImage";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../../components/Button";
 import styles from "../../styles/styles";
+import MangaService from "../../services/manga.service";
 
-type ChapterState = {
-  pages: ChapterPageType[];
-  currentChapter: Chapter | null;
-  nextChapter: Chapter | null;
-  prevChapter: Chapter | null;
-};
-
-const EMPTY_STATE: ChapterState = {
+const EMPTY_STATE: ChapterContent = {
   pages: [],
   currentChapter: null,
   nextChapter: null,
@@ -27,13 +23,13 @@ const EMPTY_STATE: ChapterState = {
 const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
   const { slug, chapterSlug, service } = route.params;
 
-  const pageRef = useRef<MangaPage | null>(null);
+  const pageRef = useRef<MangaService | null>(null);
   const pageSizes = useRef<Record<string, ImageSize>>({});
   const updateTimeout = useRef<NodeJS.Timeout | null>(null);
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
 
-  const [state, setState] = useState<ChapterState>(EMPTY_STATE);
+  const [state, setState] = useState<ChapterContent>(EMPTY_STATE);
   const [showControls, setShowControls] = useState(false);
 
   const { pages, currentChapter, nextChapter, prevChapter } = state;
@@ -181,7 +177,9 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
                   }}
                 >
                   <Ionicons name="chevron-back" size={16} color="#fff" />
-                  <Text style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}>
+                  <Text
+                    style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}
+                  >
                     Előző
                   </Text>
                 </Button>
@@ -201,7 +199,9 @@ const ChapterPage: React.FC<ChapterPageProps> = ({ route, navigation }) => {
                     });
                   }}
                 >
-                  <Text style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}>
+                  <Text
+                    style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}
+                  >
                     Következő
                   </Text>
                   <Ionicons name="chevron-forward" size={16} color="#fff" />

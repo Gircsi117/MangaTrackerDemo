@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Container from "../../components/Container";
 import { MangaPageProps } from "../../types/navigation.type";
 import { Chapter, Manga } from "../../types/manga.type";
 import { Text, TouchableOpacity, View } from "react-native";
 import styles, { colors } from "../../styles/styles";
 import Button from "../../components/Button";
-import { Ionicons, Feather } from "@expo/vector-icons";
+import { Ionicons, Feather, Fontisto, FontAwesome5 } from "@expo/vector-icons";
 import { Linking } from "react-native";
 import Image from "../../components/Image";
 
@@ -27,6 +27,23 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
 
     getManga();
   }, []);
+
+  const renderMangaDetail = useCallback(
+    (icon: React.JSX.Element, text: string) => (
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: 8,
+          alignItems: "center",
+        }}
+      >
+        <Text style={styles.textMuted}>{icon}</Text>
+        <Text style={styles.textMuted}>{text}</Text>
+      </View>
+    ),
+    [],
+  );
 
   return (
     <Container withNavbar>
@@ -50,27 +67,49 @@ const MangaPage: React.FC<MangaPageProps> = ({ route, navigation }) => {
         </Button>
       </View>
 
-      <Image
-        autoResize
-        source={{
-          uri: manga?.coverUrl,
-          headers: service.headers,
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: 8,
+          marginBottom: 12,
         }}
-        transition={200}
-        style={{ borderRadius: 12 }}
-      />
-
-      <Text
-        style={[
-          styles.text,
-          { fontSize: 22, fontWeight: "700", marginTop: 14 },
-        ]}
       >
-        {manga?.title}
-      </Text>
-      <Text style={[styles.textMuted, { marginTop: 4, marginBottom: 10 }]}>
-        {manga?.author} • {manga?.type}
-      </Text>
+        <Image
+          defaultAspectRatio={2 / 3}
+          contentFit="fill"
+          source={{
+            uri: manga?.coverUrl,
+            headers: service.headers,
+          }}
+          transition={200}
+          style={{ borderRadius: 12, flex: 1 }}
+        />
+        <View style={{ flex: 2 }}>
+          <Text
+            style={[
+              styles.text,
+              { fontSize: 22, fontWeight: "700", marginBottom: 8 },
+            ]}
+          >
+            {manga?.title}
+          </Text>
+          <View style={{ display: "flex", gap: 4 }}>
+            {renderMangaDetail(
+              <Feather name="user" size={16} />,
+              manga?.author || "Unknown",
+            )}
+            {renderMangaDetail(
+              <Feather name="book" size={16} />,
+              manga?.type || "Unknown",
+            )}
+            {renderMangaDetail(
+              <FontAwesome5 name="sourcetree" size={16} />,
+              service.name,
+            )}
+          </View>
+        </View>
+      </View>
       <Text
         style={[
           styles.text,

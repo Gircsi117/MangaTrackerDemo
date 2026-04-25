@@ -1,14 +1,14 @@
 import * as SQLite from "expo-sqlite";
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import Env from "../modules/env.module";
 import * as FileSystem from "expo-file-system/legacy";
 import * as Sharing from "expo-sharing";
 import JSZip from "jszip";
 import { CategoryTable } from "./models/category.model";
 import * as Updates from "expo-updates";
+import { DB_NAME } from "../constants/config";
 
 class DrizzleDB {
-  private static readonly expoDb = SQLite.openDatabaseSync(Env.DB_NAME);
+  private static readonly expoDb = SQLite.openDatabaseSync(DB_NAME);
   public static readonly main = drizzle(this.expoDb, {
     schema: {
       CategoryTable,
@@ -42,7 +42,7 @@ class DrizzleDB {
 
   public static async deleteMain() {
     try {
-      const dbPath = `${FileSystem.documentDirectory}SQLite/${Env.DB_NAME}`;
+      const dbPath = `${FileSystem.documentDirectory}SQLite/${DB_NAME}`;
 
       console.log(dbPath);
 

@@ -1,4 +1,3 @@
-import MangaPage from "../modules/manga-page.module";
 import axios from "axios";
 import {
   Chapter,
@@ -7,10 +6,11 @@ import {
   ChapterSlug,
   Manga,
   MangaPageConstructor,
-} from "../types/manga.type";
-import { List, ListParams } from "../types/list.types";
+} from "../../types/manga.type";
+import { List, ListParams } from "../../types/list.types";
+import MangaService from "../manga.service";
 
-class ToonVerseService extends MangaPage {
+class ToonVerseService extends MangaService {
   public static readonly id = "toonverse";
   public static readonly name = "ToonVerse";
   protected static readonly baseUrl = "https://api.toonverse.net";

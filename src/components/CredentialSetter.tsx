@@ -47,11 +47,13 @@ const CredentialSetter: React.FC<Props> = ({ id, name }) => {
 
   return (
     <View style={[styles.card, { padding: 16, gap: 12 }]}>
-      <Text style={[styles.text, { fontSize: 15, fontWeight: "600" }]}>{name}</Text>
+      <Text style={[styles.text, { fontSize: 15, fontWeight: "600" }]}>
+        {name}
+      </Text>
       <TextInput
         value={email}
         onChangeText={setEmail}
-        placeholder="Email"
+        placeholder="Email / Felhasználónév"
         placeholderTextColor={colors.fontMuted}
         keyboardType="email-address"
         autoCapitalize="none"
